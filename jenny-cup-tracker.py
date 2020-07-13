@@ -32,7 +32,8 @@ from selenium.webdriver.support.ui import (
 
 
 FILE_DIR = path.dirname(path.realpath(__file__))
-
+SLEEP_TIME = 3
+POLL_TIME = 30
 
 class Emailer:
     def __init__(self, server, port, sender, sender_pass, receiver):
@@ -89,16 +90,17 @@ class AmazonScraper(Scraper):
             (str): state
         """
         
+        xpath = "//*[@id='availability']"
         while True:
             try:
-                print("wut")
-                # driver.get(site)
+                driver.get(site)
                 
-                # element = waiter.until(
-                #     visibility_of_element_located((By.XPATH, xpath))
-                # )
-                # availability = element.find_element_by_tag_name("p").text
-                # print(availability)
+                element = waiter.until(
+                    visibility_of_element_located((By.XPATH, xpath))
+                )
+                sleep(period)
+                availability = element.find_elements()[0].text
+                print("test", availability)
                 
                 # if availability != last_state:
                 #     cr = "\n"
@@ -128,7 +130,7 @@ def main():
     }
     scraper_configs = {
         "site": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-        "period": 30
+        "period": POLL_TIME
     }
     scraper = AmazonScraper(
         scraper_configs["site"],
