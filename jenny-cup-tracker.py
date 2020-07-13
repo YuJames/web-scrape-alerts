@@ -100,7 +100,7 @@ class AmazonScraper(Scraper):
                     visibility_of_element_located((By.XPATH, xpath))
                 )
                 sleep(SLEEP_TIME)
-                availability = element.find_elements()[0].text
+                availability = element.find_element_by_tag_name("span").text
                 print("test", availability)
                 
                 # if availability != last_state:
