@@ -114,7 +114,7 @@ class AmazonScraper(Scraper):
             except Exception as e:
                 print(f"AmazonScraper.scrape_site - {repr(e)}")
             finally:
-                driver.quit()
+                self.driver.quit()
                 sleep(period)
 
 
