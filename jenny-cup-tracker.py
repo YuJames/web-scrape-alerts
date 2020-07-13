@@ -93,9 +93,9 @@ class AmazonScraper(Scraper):
         xpath = "//*[@id='availability']"
         while True:
             try:
-                driver.get(site)
+                self.driver.get(site)
                 
-                element = waiter.until(
+                element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
                 sleep(period)
