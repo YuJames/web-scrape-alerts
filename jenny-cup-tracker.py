@@ -110,7 +110,6 @@ class AmazonScraper(Scraper):
 
         for i in count():
             try:
-                
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
@@ -127,7 +126,6 @@ class AmazonScraper(Scraper):
             except Exception as e:
                 print(f"AmazonScraper.scrape_site - {repr(e)}")
             finally:
-                # self.driver.quit()
                 self.driver.refresh()
                 sleep(period)
 
