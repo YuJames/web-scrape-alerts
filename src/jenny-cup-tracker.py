@@ -142,6 +142,7 @@ class AmazonScraper(Scraper):
                 self.stock_state = availability
             except Exception as e:
                 logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
+                self.driver.quit()
                 self.driver = webdriver.Firefox(
                     executable_path=path.join(FILE_DIR, "..", "geckodriver"),
                     options=self.options
