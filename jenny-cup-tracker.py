@@ -39,7 +39,7 @@ from selenium.webdriver.support.ui import (
 
 FILE_DIR = path.dirname(path.realpath(__file__))
 SLEEP_TIME = 3
-POLL_TIME = 30
+POLL_TIME = 5
 
 class Emailer:
     def __init__(self, server, port, sender, sender_pass, receiver):
