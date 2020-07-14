@@ -36,10 +36,17 @@ from selenium.webdriver.support.ui import (
     WebDriverWait
 )
 
+from logger import (
+    logger,
+    DEBUG, INFO, WARNING, ERROR
+)
+
 
 FILE_DIR = path.dirname(path.realpath(__file__))
 SLEEP_TIME = 3
 POLL_TIME = 5
+MAX_RETRIES = 10
+
 
 class Emailer:
     def __init__(self, server, port, sender, sender_pass, receiver):
@@ -54,30 +61,33 @@ class Emailer:
 
         Args:
             message (str): email message
+        Returns:
+            (bool): True if successful, False if otherwise
         """
 
-        try:
-            server = SMTP(self.server, self.port)
-            server.starttls()
-            server.login(self.sender, self.sender_pass)
-            server.sendmail(
-                self.sender,
-                self.receiver,
-                (
-                    f"From: {self.sender}\n"
-                    f"To: {self.receiver}\n"
-                    f"Subject: {subject}\n\n"
-                    f"{message}"
+        for _ in range(MAX_RETRIES):
+            try:
+                server = SMTP(self.server, self.port)
+                server.starttls()
+                server.login(self.sender, self.sender_pass)
+                server.sendmail(
+                    self.sender,
+                    self.receiver,
+                    (
+                        f"From: {self.sender}\n"
+                        f"To: {self.receiver}\n"
+                        f"Subject: {subject}\n\n"
+                        f"{message}"
+                    )
                 )
-            )
 
-            return True
-        except Exception as e:
-            print(f"Emailer.send_email - {repr(e)}")
-
-            return False
-        finally:
-            server.close()
+                return True
+            except Exception as e:
+                logger.write(DEBUG, f"Emailer.send_email - {repr(e)}")
+            finally:
+                server.close()
+        
+        return False
 
 class Scraper(ABC):
     @abstractmethod
@@ -91,7 +101,7 @@ class AmazonScraper(Scraper):
         self.options = Options()
         self.options.headless = True
         self.driver = webdriver.Firefox(
-            executable_path=path.join(FILE_DIR, "geckodriver"),
+            executable_path=path.join(FILE_DIR, "..", "geckodriver"),
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, 10)
@@ -110,23 +120,35 @@ class AmazonScraper(Scraper):
 
         for i in count():
             try:
+                # scrape page and reload
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
                 sleep(SLEEP_TIME)
                 availability = element.find_element_by_tag_name("span").text
-
-                if i == 0:
-                    self.stock_state = availability
-                    self.emailer.send_email(self.site, f"Scraper first run: {availability}")
-                elif availability != self.stock_state:
-                    self.emailer.send_email(self.site, f"State change alert: {availability}")
-                    self.stock_state = availability
-                print(f"{datetime.now()} - run {i}: {availability}")
-            except Exception as e:
-                print(f"AmazonScraper.scrape_site - {repr(e)}")
-            finally:
                 self.driver.refresh()
+                # record scrape attempt after no scrape-related failures
+                logger.write(INFO, f"AmazonScraper.scrape_site - run {i}: {availability}")
+                # when to send out an alert
+                if i == 0:
+                    is_sent = self.emailer.send_email(self.site, f"Scraper first run: {availability}")
+                    if not is_sent:
+                        raise Exception("Email not sent")
+                elif availability != self.stock_state:
+                    is_sent = self.emailer.send_email(self.site, f"State change alert: {availability}")
+                    if not is_sent:
+                        raise Exception("Email not sent")
+                # update stock state only after no error
+                self.stock_state = availability
+            except Exception as e:
+                logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
+                self.driver = webdriver.Firefox(
+                    executable_path=path.join(FILE_DIR, "..", "geckodriver"),
+                    options=self.options
+                )
+                self.waiter = WebDriverWait(self.driver, 10)
+                self.driver.get(self.site)
+            finally:
                 sleep(period)
 
 
