@@ -54,7 +54,7 @@ class Emailer:
         """
 
         try:
-            server = SMTP(smtp_server,port)
+            server = SMTP(self.server, self.port)
             server.starttls()
             server.login(self.sender, self.sender_pass)
             server.sendmail(
