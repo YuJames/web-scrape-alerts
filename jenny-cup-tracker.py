@@ -91,7 +91,6 @@ class AmazonScraper(Scraper):
             executable_path=path.join(FILE_DIR, "geckodriver"),
             options=self.options
         )
-        self.waiter = WebDriverWait(self.driver, 10)
     
     def scrape_site(self, period):
         """Scrape the site and send an alert when the state changes.
@@ -106,6 +105,7 @@ class AmazonScraper(Scraper):
 
         for i in count():
             try:
+                self.waiter = WebDriverWait(self.driver, 10)
                 self.driver.get(self.site)
                 
                 element = self.waiter.until(
