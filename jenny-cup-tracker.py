@@ -90,6 +90,12 @@ class AmazonScraper(Scraper):
         self.emailer = Emailer(**kwargs)
         self.options = Options()
         self.options.headless = True
+        self.driver = webdriver.Firefox(
+            executable_path=path.join(FILE_DIR, "geckodriver"),
+            options=self.options
+        )
+        self.waiter = WebDriverWait(self.driver, 10)
+        self.driver.get(self.site)
     
     def scrape_site(self, period):
         """Scrape the site and send an alert when the state changes.
@@ -104,12 +110,6 @@ class AmazonScraper(Scraper):
 
         for i in count():
             try:
-                self.driver = webdriver.Firefox(
-                    executable_path=path.join(FILE_DIR, "geckodriver"),
-                    options=self.options
-                )
-                self.waiter = WebDriverWait(self.driver, 10)
-                self.driver.get(self.site)
                 
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
@@ -127,7 +127,8 @@ class AmazonScraper(Scraper):
             except Exception as e:
                 print(f"AmazonScraper.scrape_site - {repr(e)}")
             finally:
-                self.driver.quit()
+                # self.driver.quit()
+                self.driver.refresh()
                 sleep(period)
 
 
