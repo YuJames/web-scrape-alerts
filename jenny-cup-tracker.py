@@ -2,6 +2,9 @@ from abc import (
     ABC,
     abstractmethod
 )
+from datetime import (
+    datetime
+)
 from itertools import (
     count
 )
@@ -120,7 +123,7 @@ class AmazonScraper(Scraper):
                 elif availability != self.stock_state:
                     self.emailer.send_email(self.site, f"State change alert: {availability}")
                     self.stock_state = availability
-                print(f"run {i}: {availability}")
+                print(f"{datetime.now()} - run {i}: {availability}")
             except Exception as e:
                 print(f"AmazonScraper.scrape_site - {repr(e)}")
             finally:
