@@ -146,6 +146,7 @@ class AmazonScraper(Scraper):
                 self.stock_state = availability
 
                 if i % MAX_REFRESHES == 0:
+                    self.driver.quit()
                     self.reconnect()
             except Exception as e:
                 logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
