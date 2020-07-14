@@ -137,8 +137,7 @@ def main():
         "port": 587,
         "sender": "yujames33@gmail.com",
         "sender_pass": environ["SENDER_PASS"],
-        # "receiver": "Jennguyenna@gmail.com"
-        "receiver": "yujames33@gmail.com"
+        "receiver": "Jennguyenna@gmail.com"
     }
     scraper_configs = {
         "site": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
