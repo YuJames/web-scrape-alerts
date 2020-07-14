@@ -2,6 +2,9 @@ from abc import (
     ABC,
     abstractmethod
 )
+from itertools import (
+    count
+)
 from os import (
     environ,
     getcwd,
