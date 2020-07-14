@@ -46,7 +46,7 @@ FILE_DIR = path.dirname(path.realpath(__file__))
 SLEEP_TIME = 3
 POLL_TIME = 5
 MAX_RETRIES = 10
-
+MAX_REFRESHES = 20
 
 class Emailer:
     def __init__(self, server, port, sender, sender_pass, receiver):
@@ -100,13 +100,17 @@ class AmazonScraper(Scraper):
         self.emailer = Emailer(**kwargs)
         self.options = Options()
         self.options.headless = True
+        
+        self.reconnect()
+    
+    def reconnect(self):
         self.driver = webdriver.Firefox(
             executable_path=path.join(FILE_DIR, "..", "geckodriver"),
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, 10)
         self.driver.get(self.site)
-    
+
     def scrape_site(self, period):
         """Scrape the site and send an alert when the state changes.
         
@@ -140,15 +144,13 @@ class AmazonScraper(Scraper):
                         raise Exception("Email not sent")
                 # update stock state only after no error
                 self.stock_state = availability
+
+                if i % MAX_REFRESHES == 0:
+                    self.reconnect()
             except Exception as e:
                 logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                self.driver = webdriver.Firefox(
-                    executable_path=path.join(FILE_DIR, "..", "geckodriver"),
-                    options=self.options
-                )
-                self.waiter = WebDriverWait(self.driver, 10)
-                self.driver.get(self.site)
+                self.reconnect()
             finally:
                 sleep(period)
 
