@@ -54,7 +54,16 @@ class Emailer:
             server = SMTP(smtp_server,port)
             server.starttls()
             server.login(self.sender, self.sender_pass)
-            server.sendmail(self.sender, self.receiver, message)
+            server.sendmail(
+                self.sender,
+                self.receiver,
+                (
+                    f"From: {self.sender}\n"
+                    f"To: {self.receiver}\n"
+                    f"Subject: {subject}\n\n"
+                    f"{message}"
+                )
+            )
 
             return True
         except Exception as e:
@@ -92,7 +101,7 @@ class AmazonScraper(Scraper):
         
         xpath = "//*[@id='availability']"
 
-        while True:
+        for i in count():
             try:
                 self.driver.get(self.site)
                 
@@ -101,19 +110,14 @@ class AmazonScraper(Scraper):
                 )
                 sleep(SLEEP_TIME)
                 availability = element.find_element_by_tag_name("span").text
-                print("test", availability)
-                
-                # if availability != last_state:
-                #     cr = "\n"
-                #     message = (
-                #         f"From: {sender_email}{cr}"
-                #         f"To: {receiver_email}{cr}"
-                #         f"Subject: {site}{cr}{cr}"
-                #         f"{availability}"
-                #     )
-                #     send_email(
-                #         message
-                #     )
+
+                if i == 0:
+                    self.stock_state = availability
+                    self.emailer.send_email(self.site, f"Scraper first run: {availability}")
+                elif availability != self.stock_state:
+                    self.emailer.send_email(self.site, f"State change alert: {availability}")
+                    self.stock_state = availability
+                print(f"run {i}: {availability}")
             except Exception as e:
                 print(f"AmazonScraper.scrape_site - {repr(e)}")
             finally:
@@ -127,7 +131,8 @@ def main():
         "port": 587,
         "sender": "yujames33@gmail.com",
         "sender_pass": environ["SENDER_PASS"],
-        "receiver": "jennifer.nguyen.130@gmail.com"
+        # "receiver": "Jennguyenna@gmail.com"
+        "receiver": "yujames33@gmail.com"
     }
     scraper_configs = {
         "site": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
