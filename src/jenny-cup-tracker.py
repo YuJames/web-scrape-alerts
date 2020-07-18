@@ -128,8 +128,8 @@ class ScrapeTiming:
 
 
 class AmazonScraper(Scraper, ScrapeTiming):
-    def __init__(self, site, **kwargs):
-        Scraper.__init__(site)
+    def __init__(self, sites, **kwargs):
+        Scraper.__init__(**sites)
         ScrapeTiming.__init__()
 
         self.emailer = Emailer(**kwargs)
@@ -200,7 +200,7 @@ async def main():
         "receiver": "Jennguyenna@gmail.com"
     }
     jenny_scraper = AmazonScraper(
-        scraper_configs["gradient-cups"],
+        {"gradient-cups": scraper_configs["gradient-cups"]},
         **jenny_email_configs
     )
     await gather(
