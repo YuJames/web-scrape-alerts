@@ -146,7 +146,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
         xpath = "//*[@id='availability']"
 
-        await self.reconnect()
+        await self.reconnect(site_key)
 
         for i in count():
             try:
@@ -179,11 +179,11 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    await self.reconnect()
+                    await self.reconnect(site_key)
             except Exception as e:
                 logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                await self.reconnect()
+                await self.reconnect(site_key)
             finally:
                 sleep(self.poll_time)
 
