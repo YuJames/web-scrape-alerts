@@ -129,7 +129,7 @@ class ScrapeTiming:
 
 class AmazonScraper(Scraper, ScrapeTiming):
     def __init__(self, sites, **kwargs):
-        Scraper.__init__(**sites)
+        Scraper.__init__(self, **sites)
         ScrapeTiming.__init__()
 
         self.emailer = Emailer(**kwargs)
