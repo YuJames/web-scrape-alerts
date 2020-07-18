@@ -1,6 +1,6 @@
 from asyncio import (
-    gather,
-    run
+    get_event_loop,
+    gather
 )
 from itertools import (
     count
@@ -212,4 +212,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    run(main())
+    loop = get_event_loop()
+    loop.run_until_complete(main())
+    loop.close()
