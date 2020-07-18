@@ -134,8 +134,6 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
         self.emailer = Emailer(**kwargs)
 
-        await self.reconnect()
-
     async def scrape_site(self, site_key, initial=True):
         """Scrape the site and send an alert when the state changes.
 
@@ -147,6 +145,8 @@ class AmazonScraper(Scraper, ScrapeTiming):
         """
 
         xpath = "//*[@id='availability']"
+
+        await self.reconnect()
 
         for i in count():
             try:
