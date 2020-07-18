@@ -100,7 +100,7 @@ class Scraper():
         self.driver = None
         self.waiter = None
 
-    def __getattr__(self, key):
+    def __getitem__(self, key):
         return self.sites[key]
 
     async def reconnect(self, site_key):
