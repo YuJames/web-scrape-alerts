@@ -10,7 +10,6 @@ from itertools import (
 )
 from os import (
     environ,
-    getcwd,
     path
 )
 from smtplib import (
@@ -42,20 +41,24 @@ from logger import (
 )
 
 
-FILE_DIR = path.dirname(path.realpath(__file__))
-SLEEP_TIME = 3
-POLL_TIME = 5
-MAX_RETRIES = 10
-MAX_REFRESHES = 20
+PROJECT_ROOT = environ["PROJECT_ROOT"]
 
-class Emailer:
+
+class EmailTiming:
+    def __init__(self):
+        self.max_retries = 3
+
+
+class Emailer(EmailTiming):
     def __init__(self, server, port, sender, sender_pass, receiver):
+        super().__init__()
+
         self.server = server
         self.port = port
         self.sender = sender
         self.sender_pass = sender_pass
         self.receiver = receiver
-    
+
     def send_email(self, subject, message):
         """Send email.
 
@@ -65,7 +68,7 @@ class Emailer:
             (bool): True if successful, False if otherwise
         """
 
-        for _ in range(MAX_RETRIES):
+        for _ in range(self.max_retries):
             try:
                 server = SMTP(self.server, self.port)
                 server.starttls()
@@ -86,40 +89,54 @@ class Emailer:
                 logger.write(DEBUG, f"Emailer.send_email - {repr(e)}")
             finally:
                 server.close()
-        
+
         return False
 
-class Scraper(ABC):
-    @abstractmethod
-    def scrape_site(self):
-        pass
 
-class AmazonScraper(Scraper):
-    def __init__(self, site, **kwargs):
+class Scraper():
+    def __init__(self, site):
         self.site = site
-        self.emailer = Emailer(**kwargs)
         self.options = Options()
         self.options.headless = True
-        
-        self.reconnect()
-    
+        self.driver = None
+        self.waiter = None
+
     def reconnect(self):
         self.driver = webdriver.Firefox(
-            executable_path=path.join(FILE_DIR, "..", "geckodriver"),
+            executable_path=path.join(PROJECT_ROOT, "geckodriver"),
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, 10)
         self.driver.get(self.site)
 
-    def scrape_site(self, period):
+    def scrape_site(self):
+        pass
+
+
+class ScrapeTiming:
+    def __init__(self):
+        self.sleep_time = 3
+        self.poll_time = 5
+        self.max_refreshes = 20
+
+
+class AmazonScraper(Scraper, ScrapeTiming):
+    def __init__(self, site, **kwargs):
+        super().__init__(site)
+
+        self.emailer = Emailer(**kwargs)
+
+        self.reconnect()
+
+    def scrape_site(self, initial=True):
         """Scrape the site and send an alert when the state changes.
-        
+
         Args:
-            period (int): polling period in seconds
+            initial (bool): send initial email to indicate scrape start
         Returns:
             (str): state
         """
-        
+
         xpath = "//*[@id='availability']"
 
         for i in count():
@@ -128,13 +145,13 @@ class AmazonScraper(Scraper):
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
-                sleep(SLEEP_TIME)
+                sleep(self.sleep_time)
                 availability = element.find_element_by_tag_name("span").text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"AmazonScraper.scrape_site - run {i}: {availability}")
                 # when to send out an alert
-                if i == 0:
+                if i == 0 and initial:
                     is_sent = self.emailer.send_email(self.site, f"Scraper first run: {availability}")
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -145,7 +162,7 @@ class AmazonScraper(Scraper):
                 # update stock state only after no error
                 self.stock_state = availability
 
-                if i % MAX_REFRESHES == 0:
+                if i % self.max_refreshes == 0:
                     self.driver.quit()
                     self.reconnect()
             except Exception as e:
@@ -153,27 +170,25 @@ class AmazonScraper(Scraper):
                 self.driver.quit()
                 self.reconnect()
             finally:
-                sleep(period)
+                sleep(self.poll_time)
 
 
 def main():
-    email_configs = {
-        "server": "smtp.gmail.com",
-        "port": 587,
-        "sender": "yujames33@gmail.com",
+    scraper_configs = {
+        "gradient-cups": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so"
+    }
+    jenny_email_configs = {
+        "server": environ["SERVER"],
+        "port": environ["PORT"],
+        "sender": environ["SENDER"],
         "sender_pass": environ["SENDER_PASS"],
         "receiver": "Jennguyenna@gmail.com"
     }
-    scraper_configs = {
-        "site": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-        "period": POLL_TIME
-    }
-    scraper = AmazonScraper(
-        scraper_configs["site"],
-        **email_configs
+    jenny_scraper = AmazonScraper(
+        scraper_configs["gradient-cups"],
+        **jenny_email_configs
     )
-
-    scraper.scrape_site(scraper_configs["period"])
+    jenny_scraper.scrape_site()
 
 
 if __name__ == "__main__":
