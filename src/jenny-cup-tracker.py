@@ -1,10 +1,3 @@
-from abc import (
-    ABC,
-    abstractmethod
-)
-from datetime import (
-    datetime
-)
 from itertools import (
     count
 )
@@ -109,9 +102,6 @@ class Scraper():
         self.waiter = WebDriverWait(self.driver, 10)
         self.driver.get(self.site)
 
-    def scrape_site(self):
-        pass
-
 
 class ScrapeTiming:
     def __init__(self):
@@ -152,11 +142,17 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 logger.write(INFO, f"AmazonScraper.scrape_site - run {i}: {availability}")
                 # when to send out an alert
                 if i == 0 and initial:
-                    is_sent = self.emailer.send_email(self.site, f"Scraper first run: {availability}")
+                    is_sent = self.emailer.send_email(
+                        subject=f"Scraper first run: {availability}",
+                        message=self.site
+                    )
                     if not is_sent:
                         raise Exception("Email not sent")
                 elif availability != self.stock_state:
-                    is_sent = self.emailer.send_email(self.site, f"State change alert: {availability}")
+                    is_sent = self.emailer.send_email(
+                        subject=f"State change alert: {availability}",
+                        message=self.site
+                    )
                     if not is_sent:
                         raise Exception("Email not sent")
                 # update stock state only after no error
