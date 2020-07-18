@@ -1,3 +1,7 @@
+from asyncio import (
+    gather,
+    run
+)
 from itertools import (
     count
 )
@@ -87,20 +91,33 @@ class Emailer(EmailTiming):
 
 
 class Scraper():
-    def __init__(self, site):
-        self.site = site
+    def __init__(self, **kwargs):
+        self.sites = {
+            **kwargs
+        }
         self.options = Options()
         self.options.headless = True
         self.driver = None
         self.waiter = None
 
-    def reconnect(self):
+    def __getattr__(self, key):
+        return self.sites[key]
+
+    async def reconnect(self, site_key):
+        """Connect to a site through a fresh connection.
+
+        Args:
+            site_key (str): key to website
+        Returns:
+            (None)
+        """
+
         self.driver = webdriver.Firefox(
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, 10)
-        self.driver.get(self.site)
+        self.driver.get(self[site_key])
 
 
 class ScrapeTiming:
@@ -117,12 +134,13 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
         self.emailer = Emailer(**kwargs)
 
-        self.reconnect()
+        await self.reconnect()
 
-    def scrape_site(self, initial=True):
+    async def scrape_site(self, site_key, initial=True):
         """Scrape the site and send an alert when the state changes.
 
         Args:
+            site_key (str): key to website
             initial (bool): send initial email to indicate scrape start
         Returns:
             (str): state
@@ -144,15 +162,15 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 # when to send out an alert
                 if i == 0 and initial:
                     is_sent = self.emailer.send_email(
-                        subject=f"Scraper first run: {availability}",
-                        message=self.site
+                        subject=f"Scraper ({site_key}) first run: {availability}",
+                        message=self[site_key]
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
-                        subject=f"State change alert: {availability}",
-                        message=self.site
+                        subject=f"Scraper ({site_key}) change detected: {availability}",
+                        message=self[site_key]
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -161,16 +179,16 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    self.reconnect()
+                    await self.reconnect()
             except Exception as e:
                 logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                self.reconnect()
+                await self.reconnect()
             finally:
                 sleep(self.poll_time)
 
 
-def main():
+async def main():
     scraper_configs = {
         "gradient-cups": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so"
     }
@@ -185,8 +203,13 @@ def main():
         scraper_configs["gradient-cups"],
         **jenny_email_configs
     )
-    jenny_scraper.scrape_site()
+    await gather(
+        jenny_scraper.scrape_site(
+            site_key="gradient-cups",
+            initial=True
+        )
+    )
 
 
 if __name__ == "__main__":
-    main()
+    run(main())
