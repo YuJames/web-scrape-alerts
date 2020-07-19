@@ -15,6 +15,9 @@ from smtplib import (
 from time import (
     sleep
 )
+from uuid import (
+    uuid4
+)
 
 from selenium import (
     webdriver
@@ -92,8 +95,13 @@ class Emailer(EmailTiming):
 
 class Scraper():
     def __init__(self, **kwargs):
+        self.id = str(uuid4())[-12:]
         self.sites = {
-            **kwargs
+            x: {
+                "id": str(uuid4())[-12:],
+                "url": y
+            }
+            for x, y in kwargs.items()
         }
         self.options = Options()
         self.options.headless = True
@@ -117,7 +125,7 @@ class Scraper():
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, 10)
-        self.driver.get(self[site_key])
+        self.driver.get(self[site_key]["url"])
 
 
 class ScrapeTiming:
@@ -144,6 +152,8 @@ class AmazonScraper(Scraper, ScrapeTiming):
             (str): state
         """
 
+        run_id = f"{self.id}::{self[site_key]['id']}::{self[site_key]['url']}"
+
         xpath = "//*[@id='availability']"
 
         await self.reconnect(site_key)
@@ -158,19 +168,19 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 availability = element.find_element_by_tag_name("span").text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"AmazonScraper.scrape_site - run {i}: {availability}")
+                logger.write(INFO, f"{run_id} - AmazonScraper.scrape_site run {i}: {availability}")
                 # when to send out an alert
                 if i == 0 and initial:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({site_key}) first run: {availability}",
-                        message=self[site_key]
+                        message=self[site_key]["url"]
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({site_key}) change detected: {availability}",
-                        message=self[site_key]
+                        message=self[site_key]["url"]
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -181,7 +191,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
                     self.driver.quit()
                     await self.reconnect(site_key)
             except Exception as e:
-                logger.write(ERROR, f"AmazonScraper.scrape_site - {repr(e)}")
+                logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
                 await self.reconnect(site_key)
             finally:
