@@ -254,7 +254,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 sleep(self.poll_time)
 
 
-async def main():
+def main():
     common_email_configs = {
         "server": environ["SERVER"],
         "port": environ["PORT"],
@@ -304,9 +304,7 @@ async def main():
         for item in list(set(item_list) & set(item_subscription_list))
     ]
 
-    await gather(
-        *alerts
-    )
+    return gather(*alerts)
 
 
 if __name__ == "__main__":
