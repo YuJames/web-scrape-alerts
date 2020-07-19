@@ -142,8 +142,8 @@ class Scraper():
 class ScrapeTiming:
     def __init__(self):
         self.sleep_time = 3
-        self.poll_time = 5
-        self.max_refreshes = 20
+        self.poll_time = 3
+        self.max_refreshes = 10
 
 
 class AmazonScraper(Scraper, ScrapeTiming):
@@ -252,7 +252,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 await sleep(self.poll_time)
 
 
-def main():
+async def main():
     common_email_configs = {
         "server": environ["SERVER"],
         "port": environ["PORT"],
@@ -302,7 +302,7 @@ def main():
         for item in list(set(item_list) & set(item_subscription_list))
     ]
 
-    return gather(*alerts)
+    await gather(*alerts)
 
 
 if __name__ == "__main__":
