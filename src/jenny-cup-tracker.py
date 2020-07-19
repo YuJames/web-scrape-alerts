@@ -299,9 +299,9 @@ async def main():
             emailer=emailer,
             initial=False
         )
-        for emailer, item in subscriptions.items()
+        for emailer, item_subscription_list in subscriptions.items()
         for item_list, scraper in scrapers.items()
-        if item in item_list
+        for item in list(set(item_list) & set(item_subscription_list))
     ]
 
     await gather(
