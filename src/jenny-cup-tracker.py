@@ -119,7 +119,7 @@ class Scraper(ScrapeTiming):
     def __getitem__(self, key):
         return self.sites[key]
 
-    async def reconnect(self, site_key):
+    def reconnect(self, site_key):
         """Connect to a site through a fresh connection.
 
         Args:
@@ -132,7 +132,7 @@ class Scraper(ScrapeTiming):
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
             options=self.options
         )
-        self.waiter = WebDriverWait(self.driver, 10)
+        self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(self[site_key]["url"])
 
     async def scrape_site(self, site_key, emailer, initial=True):
