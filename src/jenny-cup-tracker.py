@@ -52,6 +52,7 @@ class ScrapeTiming:
         self.sleep_time = 3
         self.poll_time = 3
         self.max_refreshes = 10
+        self.max_wait_time = 20
 
 
 class Emailer(EmailTiming):
@@ -98,8 +99,10 @@ class Emailer(EmailTiming):
         return False
 
 
-class Scraper():
+class Scraper(ScrapeTiming):
     def __init__(self, **kwargs):
+        super().__init__()
+
         self.id = str(uuid4())[-12:]
         self.sites = {
             x: {
@@ -146,10 +149,9 @@ class Scraper():
         pass
 
 
-class AmazonScraper(Scraper, ScrapeTiming):
+class AmazonScraper(Scraper):
     def __init__(self, sites):
-        Scraper.__init__(self, **sites)
-        ScrapeTiming.__init__(self)
+        super().__init__(**sites)
 
     async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
@@ -199,10 +201,9 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 await sleep(self.poll_time)
 
 
-class ClairesScraper(Scraper, ScrapeTiming):
+class ClairesScraper(Scraper):
     def __init__(self, sites):
-        Scraper.__init__(self, **sites)
-        ScrapeTiming.__init__(self)
+        super().__init__(**sites)
 
     async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
@@ -252,10 +253,9 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 await sleep(self.poll_time)
 
 
-class CollectableMadnessScraper(Scraper, ScrapeTiming):
+class CollectableMadnessScraper(Scraper):
     def __init__(self, sites):
-        Scraper.__init__(self, **sites)
-        ScrapeTiming.__init__(self)
+        super().__init__(**sites)
 
     async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
