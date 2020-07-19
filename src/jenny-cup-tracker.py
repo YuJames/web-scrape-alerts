@@ -152,7 +152,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
             (str): state
         """
 
-        run_id = f"{self.id}::{self[site_key]['id']}::{self[site_key]['url']}"
+        run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
         xpath = "//*[@id='availability']"
 
