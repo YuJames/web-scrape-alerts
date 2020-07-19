@@ -350,10 +350,11 @@ async def main():
     }
     # database with one-to-one mapping of items list and scraper
     scrapers = {
-        tuple([x["name"] for x in items]): market_class(
+        item["name"]: market_class(
             sites={x["name"]: x["url"] for x in items}
         )
         for market_class, items in scraper_configs.items()
+        for item in items
     }
     # initialize subscription alerts
     alerts = [
@@ -362,9 +363,9 @@ async def main():
             emailer=emailer,
             initial=True
         )
-        for item_list, scraper in scrapers.items()
+        for item, scraper in scrapers.items()
         for emailer, item_subscription_list in subscriptions.items()
-        for item in list(set(item_list) & set(item_subscription_list))
+        if item in item_subscription_list
     ]
 
     await gather(*alerts)
