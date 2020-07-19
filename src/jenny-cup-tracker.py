@@ -47,6 +47,13 @@ class EmailTiming:
         self.max_retries = 3
 
 
+class ScrapeTiming:
+    def __init__(self):
+        self.sleep_time = 3
+        self.poll_time = 3
+        self.max_refreshes = 10
+
+
 class Emailer(EmailTiming):
     def __init__(self, server, port, sender, sender_pass, receiver):
         super().__init__()
@@ -139,13 +146,6 @@ class Scraper():
         pass
 
 
-class ScrapeTiming:
-    def __init__(self):
-        self.sleep_time = 3
-        self.poll_time = 3
-        self.max_refreshes = 10
-
-
 class AmazonScraper(Scraper, ScrapeTiming):
     def __init__(self, sites):
         Scraper.__init__(self, **sites)
@@ -154,7 +154,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
     async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
-        xpath = "//*[@id='availability']"
+        xpath = "//*[@id='availability']/child::span[1]"
 
         await self.reconnect(site_key)
 
@@ -165,7 +165,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
                     visibility_of_element_located((By.XPATH, xpath))
                 )
                 await sleep(self.sleep_time)
-                availability = element.find_element_by_tag_name("span").text
+                availability = element.text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"{run_id} - AmazonScraper.scrape_site run {i}: {availability}")
@@ -207,7 +207,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
     async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
-        xpath = "//*[@class='product-info-container']"
+        xpath = "//*[@class='product-info-container']//child::p"
 
         await self.reconnect(site_key)
 
@@ -218,7 +218,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                     visibility_of_element_located((By.XPATH, xpath))
                 )
                 await sleep(self.sleep_time)
-                availability = element.find_element_by_tag_name("p").text
+                availability = element.text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"{run_id} - ClairesScraper.scrape_site run {i}: {availability}")
@@ -252,6 +252,59 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 await sleep(self.poll_time)
 
 
+class CollectableMadnessScraper(Scraper, ScrapeTiming):
+    def __init__(self, sites):
+        Scraper.__init__(self, **sites)
+        ScrapeTiming.__init__(self)
+
+    async def scrape_site(self, site_key, emailer, initial=True):
+        run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
+
+        xpath = "//div[@class='product-form__payment-container']/button[1]"
+
+        await self.reconnect(site_key)
+
+        for i in count():
+            try:
+                # scrape page and reload
+                element = self.waiter.until(
+                    visibility_of_element_located((By.XPATH, xpath))
+                )
+                await sleep(self.sleep_time)
+                availability = element.text
+                self.driver.refresh()
+                # record scrape attempt after no scrape-related failures
+                logger.write(INFO, f"{run_id} - CollectableMadnessScraper.scrape_site run {i}: {availability}")
+                # when to send out an alert
+                if i == 0:
+                    if initial:
+                        is_sent = emailer.send_email(
+                            subject=f"Scraper ({site_key}) first run: {availability}",
+                            message=self[site_key]["url"]
+                        )
+                        if not is_sent:
+                            raise Exception("Email not sent")
+                elif availability != self.stock_state:
+                    is_sent = emailer.send_email(
+                        subject=f"Scraper ({site_key}) change detected: {availability}",
+                        message=self[site_key]["url"]
+                    )
+                    if not is_sent:
+                        raise Exception("Email not sent")
+                # update stock state only after no error
+                self.stock_state = availability
+
+                if i % self.max_refreshes == 0:
+                    self.driver.quit()
+                    await self.reconnect(site_key)
+            except Exception as e:
+                logger.write(ERROR, f"{run_id} - CollectableMadnessScraper.scrape_site - {repr(e)}")
+                self.driver.quit()
+                await self.reconnect(site_key)
+            finally:
+                await sleep(self.poll_time)
+
+
 async def main():
     common_email_configs = {
         "server": environ["SERVER"],
@@ -272,6 +325,16 @@ async def main():
                 "name": "summer-fun-squish",
                 "url": 'https://www.claires.com/us/squishmallows-5"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946'
             }
+        ],
+        CollectableMadnessScraper: [
+            {
+                "name": "purple-octo",
+                "url": "https://collectiblemadness.com.au/products/squishmallows-10-assortment-s1?variant=32092566323265"
+            },
+            {
+                "name": "orange-octo",
+                "url": "https://collectiblemadness.com.au/products/squishmallows-8-assortment?variant=32092531327041"
+            }
         ]
     }
     # database with one-to-many mapping of emailer and item subscriptions
@@ -280,7 +343,9 @@ async def main():
             "gradient-cups"
         ],
         Emailer(**common_email_configs, receiver="jennifer.nguyen.130@gmail.com"): [
-            "summer-fun-squish"
+            "summer-fun-squish",
+            "purple_octo",
+            "orange-octo"
         ]
     }
     # database with one-to-one mapping of items list and scraper
@@ -295,7 +360,7 @@ async def main():
         scraper.scrape_site(
             site_key=item,
             emailer=emailer,
-            initial=False
+            initial=True
         )
         for item_list, scraper in scrapers.items()
         for emailer, item_subscription_list in subscriptions.items()
