@@ -344,7 +344,7 @@ async def main():
         ],
         Emailer(**common_email_configs, receiver="jennifer.nguyen.130@gmail.com"): [
             "summer-fun-squish",
-            "purple_octo",
+            "purple-octo",
             "orange-octo"
         ]
     }
