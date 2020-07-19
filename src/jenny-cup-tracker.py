@@ -158,7 +158,7 @@ class AmazonScraper(Scraper):
 
         xpath = "//*[@id='availability']/child::span[1]"
 
-        await self.reconnect(site_key)
+        self.reconnect(site_key)
 
         for i in count():
             try:
@@ -192,11 +192,11 @@ class AmazonScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    await self.reconnect(site_key)
+                    self.reconnect(site_key)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                await self.reconnect(site_key)
+                self.reconnect(site_key)
             finally:
                 await sleep(self.poll_time)
 
@@ -210,7 +210,7 @@ class ClairesScraper(Scraper):
 
         xpath = "//*[@class='product-info-container']//child::p"
 
-        await self.reconnect(site_key)
+        self.reconnect(site_key)
 
         for i in count():
             try:
@@ -244,11 +244,11 @@ class ClairesScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    await self.reconnect(site_key)
+                    self.reconnect(site_key)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - ClairesScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                await self.reconnect(site_key)
+                self.reconnect(site_key)
             finally:
                 await sleep(self.poll_time)
 
@@ -262,7 +262,7 @@ class CollectableMadnessScraper(Scraper):
 
         xpath = "//div[@class='product-form__payment-container']/button[1]"
 
-        await self.reconnect(site_key)
+        self.reconnect(site_key)
 
         for i in count():
             try:
@@ -296,11 +296,11 @@ class CollectableMadnessScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    await self.reconnect(site_key)
+                    self.reconnect(site_key)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - CollectableMadnessScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
-                await self.reconnect(site_key)
+                self.reconnect(site_key)
             finally:
                 await sleep(self.poll_time)
 
