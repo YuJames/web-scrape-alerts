@@ -127,11 +127,12 @@ class Scraper():
         self.waiter = WebDriverWait(self.driver, 10)
         self.driver.get(self[site_key]["url"])
 
-    async def scrape_site(self, site_key, initial=True):
+    async def scrape_site(self, site_key, emailer, initial=True):
         """Scrape the site and send an alert when the state changes.
 
         Args:
             site_key (str): key to website
+            emailer (Emailer): emailer to use for alerts
             initial (bool): send initial email to indicate scrape start
         Returns:
             (str): state
@@ -148,13 +149,11 @@ class ScrapeTiming:
 
 
 class AmazonScraper(Scraper, ScrapeTiming):
-    def __init__(self, sites, **kwargs):
+    def __init__(self, sites):
         Scraper.__init__(self, **sites)
         ScrapeTiming.__init__(self)
 
-        self.emailer = Emailer(**kwargs)
-
-    async def scrape_site(self, site_key, initial=True):
+    async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
         xpath = "//*[@id='availability']"
@@ -175,14 +174,14 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 # when to send out an alert
                 if i == 0:
                     if initial:
-                        is_sent = self.emailer.send_email(
+                        is_sent = emailer.send_email(
                             subject=f"Scraper ({site_key}) first run: {availability}",
                             message=self[site_key]["url"]
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
                 elif availability != self.stock_state:
-                    is_sent = self.emailer.send_email(
+                    is_sent = emailer.send_email(
                         subject=f"Scraper ({site_key}) change detected: {availability}",
                         message=self[site_key]["url"]
                     )
@@ -203,13 +202,11 @@ class AmazonScraper(Scraper, ScrapeTiming):
 
 
 class ClairesScraper(Scraper, ScrapeTiming):
-    def __init__(self, sites, **kwargs):
+    def __init__(self, sites):
         Scraper.__init__(self, **sites)
         ScrapeTiming.__init__(self)
 
-        self.emailer = Emailer(**kwargs)
-
-    async def scrape_site(self, site_key, initial=True):
+    async def scrape_site(self, site_key, emailer, initial=True):
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
         xpath = "//*[@class='product-info-container']"
@@ -230,14 +227,14 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 # when to send out an alert
                 if i == 0:
                     if initial:
-                        is_sent = self.emailer.send_email(
+                        is_sent = emailer.send_email(
                             subject=f"Scraper ({site_key}) first run: {availability}",
                             message=self[site_key]["url"]
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
                 elif availability != self.stock_state:
-                    is_sent = self.emailer.send_email(
+                    is_sent = emailer.send_email(
                         subject=f"Scraper ({site_key}) change detected: {availability}",
                         message=self[site_key]["url"]
                     )
@@ -258,47 +255,57 @@ class ClairesScraper(Scraper, ScrapeTiming):
 
 
 async def main():
-    scraper_configs = {
-        "gradient-cups": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-        "summer-fun-squish": 'https://www.claires.com/us/squishmallows-5"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946'
-    }
     common_email_configs = {
         "server": environ["SERVER"],
         "port": environ["PORT"],
         "sender": environ["SENDER"],
         "sender_pass": environ["SENDER_PASS"],
     }
-    jenny_email_configs = {
-        **common_email_configs,
-        "receiver": "Jennguyenna@gmail.com"
+    # database with one-to-many mapping of scraper type and items
+    scraper_configs = {
+        AmazonScraper: [
+            {
+                "name": "gradient-cups",
+                "url": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so"
+            }
+        ],
+        ClairesScraper: [
+            {
+                "name": "summer-fun-squish",
+                "url": 'https://www.claires.com/us/squishmallows-5"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946'
+            }
+        ]
     }
-    jennifer_email_configs = {
-        **common_email_configs,
-        "receiver": "jennifer.nguyen.130@gmail.com"
+    # database with one-to-many mapping of emailer and item subscriptions
+    subscriptions = {
+        Emailer(**common_email_configs, receiver="Jennguyenna@gmail.com"): [
+            "gradient-cups"
+        ],
+        Emailer(**common_email_configs, receiver="jennifer.nguyen.130@gmail.com"): [
+            "summer-fun-squish"
+        ]
     }
-
-    jenny_scrapers = [
-        AmazonScraper(
-            sites={"gradient-cups": scraper_configs["gradient-cups"]},
-            **jenny_email_configs
-        ).scrape_site(
-            site_key="gradient-cups",
-            initial=True
+    # database with one-to-one mapping of items list and scraper
+    scrapers = {
+        tuple([x["name"] for x in items]): market_class(
+            sites={x["name"]: x["url"] for x in items}
         )
-    ]
-    jennifer_scrapers = [
-        ClairesScraper(
-            sites={"summer-fun-squish": scraper_configs["summer-fun-squish"]},
-            **jennifer_email_configs
-        ).scrape_site(
-            site_key="summer-fun-squish",
-            initial=True
+        for market_class, items in scraper_configs.items()
+    }
+    # initialize subscription alerts
+    alerts = [
+        scraper.scrape_site(
+            site_key=item,
+            emailer=emailer,
+            initial=False
         )
+        for emailer, item in subscriptions.items()
+        for item_list, scraper in scrapers.items()
+        if item in item_list
     ]
 
     await gather(
-        *jenny_scrapers,
-        *jennifer_scrapers
+        *alerts
     )
 
 
