@@ -1,6 +1,7 @@
 from asyncio import (
+    gather,
     get_event_loop,
-    gather
+    sleep
 )
 from itertools import (
     count
@@ -11,9 +12,6 @@ from os import (
 )
 from smtplib import (
     SMTP
-)
-from time import (
-    sleep
 )
 from uuid import (
     uuid4
@@ -166,7 +164,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
-                sleep(self.sleep_time)
+                await sleep(self.sleep_time)
                 availability = element.find_element_by_tag_name("span").text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
@@ -198,7 +196,7 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 self.driver.quit()
                 await self.reconnect(site_key)
             finally:
-                sleep(self.poll_time)
+                await sleep(self.poll_time)
 
 
 class ClairesScraper(Scraper, ScrapeTiming):
@@ -219,7 +217,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 element = self.waiter.until(
                     visibility_of_element_located((By.XPATH, xpath))
                 )
-                sleep(self.sleep_time)
+                await sleep(self.sleep_time)
                 availability = element.find_element_by_tag_name("p").text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
@@ -251,7 +249,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 self.driver.quit()
                 await self.reconnect(site_key)
             finally:
-                sleep(self.poll_time)
+                await sleep(self.poll_time)
 
 
 def main():
@@ -299,8 +297,8 @@ def main():
             emailer=emailer,
             initial=False
         )
-        for emailer, item_subscription_list in subscriptions.items()
         for item_list, scraper in scrapers.items()
+        for emailer, item_subscription_list in subscriptions.items()
         for item in list(set(item_list) & set(item_subscription_list))
     ]
 
