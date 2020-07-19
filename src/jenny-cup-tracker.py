@@ -127,6 +127,18 @@ class Scraper():
         self.waiter = WebDriverWait(self.driver, 10)
         self.driver.get(self[site_key]["url"])
 
+    async def scrape_site(self, site_key, initial=True):
+        """Scrape the site and send an alert when the state changes.
+
+        Args:
+            site_key (str): key to website
+            initial (bool): send initial email to indicate scrape start
+        Returns:
+            (str): state
+        """
+
+        pass
+
 
 class ScrapeTiming:
     def __init__(self):
@@ -143,15 +155,6 @@ class AmazonScraper(Scraper, ScrapeTiming):
         self.emailer = Emailer(**kwargs)
 
     async def scrape_site(self, site_key, initial=True):
-        """Scrape the site and send an alert when the state changes.
-
-        Args:
-            site_key (str): key to website
-            initial (bool): send initial email to indicate scrape start
-        Returns:
-            (str): state
-        """
-
         run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
 
         xpath = "//*[@id='availability']"
@@ -199,26 +202,103 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 sleep(self.poll_time)
 
 
+class ClairesScraper(Scraper, ScrapeTiming):
+    def __init__(self, sites, **kwargs):
+        Scraper.__init__(self, **sites)
+        ScrapeTiming.__init__(self)
+
+        self.emailer = Emailer(**kwargs)
+
+    async def scrape_site(self, site_key, initial=True):
+        run_id = f"{self.id}::{site_key}::{self[site_key]['url']}"
+
+        xpath = "//*[@class='product-info-container']"
+
+        await self.reconnect(site_key)
+
+        for i in count():
+            try:
+                # scrape page and reload
+                element = self.waiter.until(
+                    visibility_of_element_located((By.XPATH, xpath))
+                )
+                sleep(self.sleep_time)
+                availability = element.find_element_by_tag_name("p").text
+                self.driver.refresh()
+                # record scrape attempt after no scrape-related failures
+                logger.write(INFO, f"{run_id} - AmazonScraper.scrape_site run {i}: {availability}")
+                # when to send out an alert
+                if i == 0:
+                    if initial:
+                        is_sent = self.emailer.send_email(
+                            subject=f"Scraper ({site_key}) first run: {availability}",
+                            message=self[site_key]["url"]
+                        )
+                        if not is_sent:
+                            raise Exception("Email not sent")
+                elif availability != self.stock_state:
+                    is_sent = self.emailer.send_email(
+                        subject=f"Scraper ({site_key}) change detected: {availability}",
+                        message=self[site_key]["url"]
+                    )
+                    if not is_sent:
+                        raise Exception("Email not sent")
+                # update stock state only after no error
+                self.stock_state = availability
+
+                if i % self.max_refreshes == 0:
+                    self.driver.quit()
+                    await self.reconnect(site_key)
+            except Exception as e:
+                logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_site - {repr(e)}")
+                self.driver.quit()
+                await self.reconnect(site_key)
+            finally:
+                sleep(self.poll_time)
+
+
 async def main():
     scraper_configs = {
-        "gradient-cups": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so"
+        "gradient-cups": "https://www.amazon.co.jp/-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
+        "summer-fun-squish": 'https://www.claires.com/us/squishmallows-5"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946'
     }
-    jenny_email_configs = {
+    common_email_configs = {
         "server": environ["SERVER"],
         "port": environ["PORT"],
         "sender": environ["SENDER"],
         "sender_pass": environ["SENDER_PASS"],
+    }
+    jenny_email_configs = {
+        **common_email_configs,
         "receiver": "Jennguyenna@gmail.com"
     }
-    jenny_scraper = AmazonScraper(
-        {"gradient-cups": scraper_configs["gradient-cups"]},
-        **jenny_email_configs
-    )
-    await gather(
-        jenny_scraper.scrape_site(
+    jennifer_email_configs = {
+        **common_email_configs,
+        "receiver": "jennifer.nguyen.130@gmail.com"
+    }
+
+    jenny_scrapers = [
+        AmazonScraper(
+            sites={"gradient-cups": scraper_configs["gradient-cups"]},
+            **jenny_email_configs
+        ).scrape_site(
             site_key="gradient-cups",
             initial=True
         )
+    ]
+    jennifer_scrapers = [
+        ClairesScraper(
+            sites={"summer-fun-squish": scraper_configs["summer-fun-squish"]},
+            **jennifer_email_configs
+        ).scrape_site(
+            site_key="summer-fun-squish",
+            initial=True
+        )
+    ]
+
+    await gather(
+        *jenny_scrapers,
+        *jennifer_scrapers
     )
 
 
