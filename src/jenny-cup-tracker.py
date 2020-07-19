@@ -170,13 +170,14 @@ class AmazonScraper(Scraper, ScrapeTiming):
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"{run_id} - AmazonScraper.scrape_site run {i}: {availability}")
                 # when to send out an alert
-                if i == 0 and initial:
-                    is_sent = self.emailer.send_email(
-                        subject=f"Scraper ({site_key}) first run: {availability}",
-                        message=self[site_key]["url"]
-                    )
-                    if not is_sent:
-                        raise Exception("Email not sent")
+                if i == 0:
+                    if initial:
+                        is_sent = self.emailer.send_email(
+                            subject=f"Scraper ({site_key}) first run: {availability}",
+                            message=self[site_key]["url"]
+                        )
+                        if not is_sent:
+                            raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({site_key}) change detected: {availability}",
