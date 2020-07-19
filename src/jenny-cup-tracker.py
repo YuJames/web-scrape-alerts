@@ -223,7 +223,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                 availability = element.find_element_by_tag_name("p").text
                 self.driver.refresh()
                 # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - AmazonScraper.scrape_site run {i}: {availability}")
+                logger.write(INFO, f"{run_id} - ClairesScraper.scrape_site run {i}: {availability}")
                 # when to send out an alert
                 if i == 0:
                     if initial:
@@ -247,7 +247,7 @@ class ClairesScraper(Scraper, ScrapeTiming):
                     self.driver.quit()
                     await self.reconnect(site_key)
             except Exception as e:
-                logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_site - {repr(e)}")
+                logger.write(ERROR, f"{run_id} - ClairesScraper.scrape_site - {repr(e)}")
                 self.driver.quit()
                 await self.reconnect(site_key)
             finally:
