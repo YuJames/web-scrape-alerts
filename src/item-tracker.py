@@ -342,11 +342,7 @@ async def main():
         Emailer(**common_email_configs, receiver="Jennguyenna@gmail.com"): [
             "gradient-cups"
         ],
-        Emailer(**common_email_configs, receiver="jennifer.nguyen.130@gmail.com"): [
-            "summer-fun-squish",
-            "purple-octo",
-            "orange-octo"
-        ]
+        Emailer(**common_email_configs, receiver="jennifer.nguyen.130@gmail.com"): []
     }
     # database with one-to-one mapping of items list and scraper
     scrapers = {
