@@ -193,7 +193,7 @@ class Scraper(ScrapeTiming):
         self.driver.get(self[item]["path"])
 
     async def scrape_all_items(self, initial=True):
-        return [self.scrape_item(item=x, initial=initial) for x in self.items]
+        return [self.scrape_item(item=x["name"], initial=initial) for x in self.items]
 
     async def scrape_item(self, item, initial=True):
         """Scrape the site and send an alert when the state changes.
