@@ -60,7 +60,7 @@ class ScrapeTiming:
 
 
 class Emailer(EmailTiming):
-    def __init__(self, server, port, sender, sender_pass, recipient):
+    def __init__(self, server, port, sender, sender_pass, recipient=None):
         """Sends emails.
 
         Args:
@@ -77,7 +77,7 @@ class Emailer(EmailTiming):
         self.port = port
         self.sender = sender
         self.sender_pass = sender_pass
-        self.recipient = None
+        self.recipient = recipient
 
     def send_email(self, subject, message, recipient=None):
         """Send an email.
@@ -141,12 +141,8 @@ class ScraperFactory():
             (list): subclasses of Scraper
         """
 
-        for i in self.database.keys():
-            for j in self.scrapers_classes:
-                if i == j.domain:
-
         return [
-            z(emailer=Emailer(**self.emailer_configs, recipient=y["subscribers"]), items=y)
+            z(emailer=Emailer(**self.emailer_configs), items=y)
             for x, y in self.database.items()
             for z in self.scrapers_classes
             if x == z.domain
@@ -219,7 +215,11 @@ class AmazonScraper(Scraper):
         super().__init__(emailer=emailer, items=items)
 
     async def scrape_item(self, item, initial=True):
-        url = path.join(self.domain, self[item]["path"])
+        entry = self[item]
+        if entry is None:
+            return
+        recipient = entry["subscribers"]
+        url = path.join(self.domain, entry["path"])
         run_id = f"{self.id}::{item}::{url}"
 
         xpath = "//*[@id='availability']/child::span[1]"
@@ -242,14 +242,16 @@ class AmazonScraper(Scraper):
                     if initial:
                         is_sent = self.emailer.send_email(
                             subject=f"Scraper ({item}) first run: {availability}",
-                            message=url
+                            message=url,
+                            recipient=recipient
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url
+                        message=url,
+                        recipient=recipient
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -274,7 +276,11 @@ class ClairesScraper(Scraper):
         super().__init__(emailer=emailer, items=items)
 
     async def scrape_item(self, item, initial=True):
-        url = path.join(self.domain, self[item]["path"])
+        entry = self[item]
+        if entry is None:
+            return
+        recipient = entry["subscribers"]
+        url = path.join(self.domain, entry["path"])
         run_id = f"{self.id}::{item}::{url}"
 
         xpath = "//*[@class='product-info-container']//child::p"
@@ -297,14 +303,16 @@ class ClairesScraper(Scraper):
                     if initial:
                         is_sent = self.emailer.send_email(
                             subject=f"Scraper ({item}) first run: {availability}",
-                            message=url
+                            message=url,
+                            recipient=recipient
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url
+                        message=url,
+                        recipient=recipient
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -329,7 +337,11 @@ class CollectableMadnessScraper(Scraper):
         super().__init__(emailer=emailer, items=items)
 
     async def scrape_item(self, item, initial=True):
-        url = path.join(self.domain, self[item]["path"])
+        entry = self[item]
+        if entry is None:
+            return
+        recipient = entry["subscribers"]
+        url = path.join(self.domain, entry["path"])
         run_id = f"{self.id}::{item}::{url}"
 
         xpath = "//div[@class='product-form__payment-container']/button[1]"
@@ -352,14 +364,16 @@ class CollectableMadnessScraper(Scraper):
                     if initial:
                         is_sent = self.emailer.send_email(
                             subject=f"Scraper ({item}) first run: {availability}",
-                            message=url
+                            message=url,
+                            recipient=recipient
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
                 elif availability != self.stock_state:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url
+                        message=url,
+                        recipient=recipient
                     )
                     if not is_sent:
                         raise Exception("Email not sent")
@@ -385,10 +399,11 @@ async def main():
             "port": environ["PORT"],
             "sender": environ["SENDER"],
             "sender_pass": environ["SENDER_PASS"]
-        }
+        },
+        database_file=CONFIG_FILE
     )
     scrapers = factory.create_scrapers()
-    alerts = [x.scrape_all_items() for x in scrapers]
+    alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
     await gather(*alerts)
 
