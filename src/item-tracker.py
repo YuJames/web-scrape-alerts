@@ -108,14 +108,15 @@ class Emailer(EmailTiming):
                         )
                     )
 
-                    return True
+                    break
                 except Exception as e:
                     logger.write(DEBUG, f"Emailer.send_email - {repr(e)}")
                 finally:
                     server.close()
+            else:
+                return False
 
-            return False
-
+        return True
 
 class ScraperFactory():
     def __init__(self, emailer_configs, database_file):
