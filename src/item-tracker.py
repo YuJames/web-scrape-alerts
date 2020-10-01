@@ -176,11 +176,11 @@ class Scraper(ScrapeTiming):
         else:
             return None
 
-    def reconnect(self, item):
+    def reconnect(self, url):
         """Connect to a site through a fresh connection.
 
         Args:
-            item (str): item name
+            url (str): site url
         Returns:
             (None)
         """
@@ -190,7 +190,7 @@ class Scraper(ScrapeTiming):
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
-        self.driver.get(self[item]["path"])
+        self.driver.get(url)
 
     async def scrape_all_items(self, initial=True):
         return [self.scrape_item(item=x["name"], initial=initial) for x in self.items]
@@ -224,7 +224,7 @@ class AmazonScraper(Scraper):
 
         xpath = "//*[@id='availability']/child::span[1]"
 
-        self.reconnect(item)
+        self.reconnect(url)
 
         for i in count():
             try:
@@ -260,11 +260,11 @@ class AmazonScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    self.reconnect(item)
+                    self.reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_item - {repr(e)}")
                 self.driver.quit()
-                self.reconnect(item)
+                self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
 
@@ -285,7 +285,7 @@ class ClairesScraper(Scraper):
 
         xpath = "//*[@class='product-info-container']//child::p"
 
-        self.reconnect(item)
+        self.reconnect(url)
 
         for i in count():
             try:
@@ -321,11 +321,11 @@ class ClairesScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    self.reconnect(item)
+                    self.reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - ClairesScraper.scrape_item - {repr(e)}")
                 self.driver.quit()
-                self.reconnect(item)
+                self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
 
@@ -346,7 +346,7 @@ class CollectableMadnessScraper(Scraper):
 
         xpath = "//div[@class='product-form__payment-container']/button[1]"
 
-        self.reconnect(item)
+        self.reconnect(url)
 
         for i in count():
             try:
@@ -382,11 +382,11 @@ class CollectableMadnessScraper(Scraper):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    self.reconnect(item)
+                    self.reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - CollectableMadnessScraper.scrape_item - {repr(e)}")
                 self.driver.quit()
-                self.reconnect(item)
+                self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
 
