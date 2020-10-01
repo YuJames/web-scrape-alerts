@@ -144,7 +144,7 @@ class ScraperFactory():
         scrapers = []
         for i, j in self.database.items():
             for k in self.scrapers_classes:
-                items_with_subscribers = [x for x in j if len(j["subscribers"]) != 0]
+                items_with_subscribers = [x for x in j if len(x["subscribers"]) != 0]
                 if i == k.domain and len(items_with_subscribers) != 0:
                     scrapers.append(k(emailer=Emailer(**self.emailer_configs), items=j))
 
