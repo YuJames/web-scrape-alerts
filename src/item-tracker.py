@@ -141,12 +141,14 @@ class ScraperFactory():
             (list): subclasses of Scraper
         """
 
-        return [
-            z(emailer=Emailer(**self.emailer_configs), items=y)
-            for x, y in self.database.items()
-            for z in self.scrapers_classes
-            if x == z.domain
-        ]
+        scrapers = []
+        for i, j in self.database.items():
+            for k in self.scrapers_classes:
+                items_with_subscribers = [x for x in j if len(j["subscribers"]) != 0]
+                if i == k.domain and len(items_with_subscribers) != 0:
+                    scrapers.append(k(emailer=Emailer(**self.emailer_configs), items=j))
+
+        return scrapers
 
 
 class Scraper(ScrapeTiming):
