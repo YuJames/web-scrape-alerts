@@ -3,14 +3,32 @@
         {
             "name": "gradient-cups",
             "path": "-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-            "subscribers": ["yujames33@gmail.com"]
-        }
+            "subscribers": ["jennguyenna@gmail.com"]}
     ],
     "https://www.claires.com": [
         {
             "name": "summer-fun-squish",
             "path": "us/squishmallows-5\"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946",
             "subscribers": []
+        }
+    ],
+    "https://collectiblemadness.com.au": [
+        {
+            "name": "purple-octo",
+            "path": "products/squishmallows-10-assortment-s1?variant=32092566323265",
+            "subscribers": []
+        },
+        {
+            "name": "orange-octo",
+            "path": "products/squishmallows-8-assortment?variant=32092531327041",
+            "subscribers": []
+        }
+    ],
+    "https://www.bathandbodyworks.com": [
+        {
+            "name": "glitter-bat-sanitizer-holder",
+            "path": "p/glow-in-the-dark-glitter-bat-pocketbac-holder-026170219.html?fbclid=IwAR2QxHqJTjsmMazYbLU-JLZMix7qU_8kGJe_EFShINGUAkejD2g3HBO5Uzg",
+            "subscribers": ["jennifer.nguyen.130@gmail.com"]
         }
     ]
 }
