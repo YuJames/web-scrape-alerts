@@ -108,14 +108,15 @@ class Emailer(EmailTiming):
                         )
                     )
 
-                    return True
+                    break
                 except Exception as e:
                     logger.write(DEBUG, f"Emailer.send_email - {repr(e)}")
                 finally:
                     server.close()
+            else:
+                return False
 
-            return False
-
+        return True
 
 class ScraperFactory():
     def __init__(self, emailer_configs, database_file):
@@ -141,12 +142,14 @@ class ScraperFactory():
             (list): subclasses of Scraper
         """
 
-        return [
-            z(emailer=Emailer(**self.emailer_configs), items=y)
-            for x, y in self.database.items()
-            for z in self.scrapers_classes
-            if x == z.domain
-        ]
+        scrapers = []
+        for i, j in self.database.items():
+            for k in self.scrapers_classes:
+                items_with_subscribers = [x for x in j if len(x["subscribers"]) != 0]
+                if i == k.domain and len(items_with_subscribers) != 0:
+                    scrapers.append(k(emailer=Emailer(**self.emailer_configs), items=j))
+
+        return scrapers
 
 
 class Scraper(ScrapeTiming):
@@ -179,11 +182,11 @@ class Scraper(ScrapeTiming):
         else:
             return None
 
-    def reconnect(self, item):
+    def reconnect(self, url):
         """Connect to a site through a fresh connection.
 
         Args:
-            item (str): item name
+            url (str): site url
         Returns:
             (None)
         """
@@ -193,7 +196,7 @@ class Scraper(ScrapeTiming):
             options=self.options
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
-        self.driver.get(self[item]["path"])
+        self.driver.get(url)
 
     def _get_target_text(self):
         """Get target variable text from site.
@@ -272,11 +275,11 @@ class Scraper(ScrapeTiming):
 
                 if i % self.max_refreshes == 0:
                     self.driver.quit()
-                    self.reconnect(item)
+                    self.reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
                 self.driver.quit()
-                self.reconnect(item)
+                self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
 
