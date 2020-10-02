@@ -245,7 +245,7 @@ class Scraper(ScrapeTiming):
         url = path.join(self.domain, entry["path"])
         run_id = f"{self.id}::{item}::{url}"
 
-        self.reconnect(item)
+        self.reconnect(url)
 
         for i in count():
             try:
