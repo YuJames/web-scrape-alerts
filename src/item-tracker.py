@@ -284,22 +284,22 @@ class Scraper(ScrapeTiming):
                 await sleep(self.poll_time)
 
 class AmazonScraper(Scraper):
-    domain = "https://amazon.co.jp"
+    domain = "https://www.amazon.co.jp"
     xpath = "//*[@id='availability']/child::span[1]"
 
 
 class ClairesScraper(Scraper):
-    domain = "https://claires.com"
+    domain = "https://www.claires.com"
     xpath = "//*[@class='product-info-container']//child::p"
 
 
 class CollectableMadnessScraper(Scraper):
-    domain = "https://collectiblemadness.com.au"
+    domain = "https://www.collectiblemadness.com.au"
     xpath = "//div[@class='product-form__payment-container']/button[1]"
 
 
 class BathBodyWorksScraper(Scraper):
-    domain = "https://bathandbodyworks.com"
+    domain = "https://www.bathandbodyworks.com"
     xpath = "//div[@class='availability-msg']"
 
 async def main():
