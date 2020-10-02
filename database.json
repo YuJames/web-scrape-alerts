@@ -1,11 +1,12 @@
 {
-    "https://www.amazon.co.jp": [
+    "https://amazon.co.jp": [
         {
             "name": "gradient-cups",
             "path": "-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-            "subscribers": ["jennguyenna@gmail.com"]}
+            "subscribers": ["yujames33@gmail.com"]
+        }
     ],
-    "https://www.claires.com": [
+    "https://claires.com": [
         {
             "name": "summer-fun-squish",
             "path": "us/squishmallows-5\"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946",
@@ -24,7 +25,7 @@
             "subscribers": []
         }
     ],
-    "https://www.bathandbodyworks.com": [
+    "https://bathandbodyworks.com": [
         {
             "name": "glitter-bat-sanitizer-holder",
             "path": "p/glow-in-the-dark-glitter-bat-pocketbac-holder-026170219.html?fbclid=IwAR2QxHqJTjsmMazYbLU-JLZMix7qU_8kGJe_EFShINGUAkejD2g3HBO5Uzg",
