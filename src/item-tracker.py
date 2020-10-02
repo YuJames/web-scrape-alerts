@@ -295,6 +295,9 @@ class CollectableMadnessScraper(Scraper):
     xpath = "//div[@class='product-form__payment-container']/button[1]"
 
 
+class BathBodyWorksScraper(Scraper):
+    domain = "https://bathandbodyworks.com"
+    xpath = "//div[@class='availability-msg']"
 
 async def main():
     # create scrapers
