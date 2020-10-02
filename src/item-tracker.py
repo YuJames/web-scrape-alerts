@@ -150,6 +150,9 @@ class ScraperFactory():
 
 
 class Scraper(ScrapeTiming):
+    domain = ""
+    xpath = ""
+
     def __init__(self, emailer, items):
         """Base class for scraping.
 
@@ -192,29 +195,46 @@ class Scraper(ScrapeTiming):
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(self[item]["path"])
 
+    def _get_target_text(self):
+        """Get target variable text from site.
+
+        Args:
+            N/A
+        Returns:
+            (str): text
+        """
+
+        element = self.waiter.until(
+            visibility_of_element_located((By.XPATH, self.xpath))
+        )
+        await sleep(self.sleep_time)
+        availability = element.text
+        self.driver.refresh()
+
+        return availability
+
     async def scrape_all_items(self, initial=True):
+        """Get valid coroutines to run.
+
+        Args:
+            initial (bool): send initial email to indicate scrape start
+        Returns:
+            (list): coroutines
+        """
+
         return [self.scrape_item(item=x["name"], initial=initial) for x in self.items]
 
     async def scrape_item(self, item, initial=True):
         """Scrape the site and send an alert when the state changes.
 
         Args:
-            site_key (str): item name
+            xpath (str): target xpath
+            item (str): item name
             initial (bool): send initial email to indicate scrape start
         Returns:
             (str): state
         """
 
-        pass
-
-
-class AmazonScraper(Scraper):
-    domain = "https://www.amazon.co.jp"
-
-    def __init__(self, emailer, items):
-        super().__init__(emailer=emailer, items=items)
-
-    async def scrape_item(self, item, initial=True):
         entry = self[item]
         if entry is None:
             return
@@ -222,21 +242,13 @@ class AmazonScraper(Scraper):
         url = path.join(self.domain, entry["path"])
         run_id = f"{self.id}::{item}::{url}"
 
-        xpath = "//*[@id='availability']/child::span[1]"
-
         self.reconnect(item)
 
         for i in count():
             try:
-                # scrape page and reload
-                element = self.waiter.until(
-                    visibility_of_element_located((By.XPATH, xpath))
-                )
-                await sleep(self.sleep_time)
-                availability = element.text
-                self.driver.refresh()
+                availability = self._get_target_text()
                 # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - AmazonScraper.scrape_item run {i}: {availability}")
+                logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
                 # when to send out an alert
                 if i == 0:
                     if initial:
@@ -262,133 +274,26 @@ class AmazonScraper(Scraper):
                     self.driver.quit()
                     self.reconnect(item)
             except Exception as e:
-                logger.write(ERROR, f"{run_id} - AmazonScraper.scrape_item - {repr(e)}")
+                logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
                 self.driver.quit()
                 self.reconnect(item)
             finally:
                 await sleep(self.poll_time)
+
+class AmazonScraper(Scraper):
+    domain = "https://amazon.co.jp"
+    xpath = "//*[@id='availability']/child::span[1]"
 
 
 class ClairesScraper(Scraper):
-    domain = "https://www.claires.com"
-
-    def __init__(self, emailer, items):
-        super().__init__(emailer=emailer, items=items)
-
-    async def scrape_item(self, item, initial=True):
-        entry = self[item]
-        if entry is None:
-            return
-        recipient = entry["subscribers"]
-        url = path.join(self.domain, entry["path"])
-        run_id = f"{self.id}::{item}::{url}"
-
-        xpath = "//*[@class='product-info-container']//child::p"
-
-        self.reconnect(item)
-
-        for i in count():
-            try:
-                # scrape page and reload
-                element = self.waiter.until(
-                    visibility_of_element_located((By.XPATH, xpath))
-                )
-                await sleep(self.sleep_time)
-                availability = element.text
-                self.driver.refresh()
-                # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - ClairesScraper.scrape_item run {i}: {availability}")
-                # when to send out an alert
-                if i == 0:
-                    if initial:
-                        is_sent = self.emailer.send_email(
-                            subject=f"Scraper ({item}) first run: {availability}",
-                            message=url,
-                            recipient=recipient
-                        )
-                        if not is_sent:
-                            raise Exception("Email not sent")
-                elif availability != self.stock_state:
-                    is_sent = self.emailer.send_email(
-                        subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url,
-                        recipient=recipient
-                    )
-                    if not is_sent:
-                        raise Exception("Email not sent")
-                # update stock state only after no error
-                self.stock_state = availability
-
-                if i % self.max_refreshes == 0:
-                    self.driver.quit()
-                    self.reconnect(item)
-            except Exception as e:
-                logger.write(ERROR, f"{run_id} - ClairesScraper.scrape_item - {repr(e)}")
-                self.driver.quit()
-                self.reconnect(item)
-            finally:
-                await sleep(self.poll_time)
+    domain = "https://claires.com"
+    xpath = "//*[@class='product-info-container']//child::p"
 
 
 class CollectableMadnessScraper(Scraper):
     domain = "https://collectiblemadness.com.au"
+    xpath = "//div[@class='product-form__payment-container']/button[1]"
 
-    def __init__(self, emailer, items):
-        super().__init__(emailer=emailer, items=items)
-
-    async def scrape_item(self, item, initial=True):
-        entry = self[item]
-        if entry is None:
-            return
-        recipient = entry["subscribers"]
-        url = path.join(self.domain, entry["path"])
-        run_id = f"{self.id}::{item}::{url}"
-
-        xpath = "//div[@class='product-form__payment-container']/button[1]"
-
-        self.reconnect(item)
-
-        for i in count():
-            try:
-                # scrape page and reload
-                element = self.waiter.until(
-                    visibility_of_element_located((By.XPATH, xpath))
-                )
-                await sleep(self.sleep_time)
-                availability = element.text
-                self.driver.refresh()
-                # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - CollectableMadnessScraper.scrape_item run {i}: {availability}")
-                # when to send out an alert
-                if i == 0:
-                    if initial:
-                        is_sent = self.emailer.send_email(
-                            subject=f"Scraper ({item}) first run: {availability}",
-                            message=url,
-                            recipient=recipient
-                        )
-                        if not is_sent:
-                            raise Exception("Email not sent")
-                elif availability != self.stock_state:
-                    is_sent = self.emailer.send_email(
-                        subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url,
-                        recipient=recipient
-                    )
-                    if not is_sent:
-                        raise Exception("Email not sent")
-                # update stock state only after no error
-                self.stock_state = availability
-
-                if i % self.max_refreshes == 0:
-                    self.driver.quit()
-                    self.reconnect(item)
-            except Exception as e:
-                logger.write(ERROR, f"{run_id} - CollectableMadnessScraper.scrape_item - {repr(e)}")
-                self.driver.quit()
-                self.reconnect(item)
-            finally:
-                await sleep(self.poll_time)
 
 
 async def main():
