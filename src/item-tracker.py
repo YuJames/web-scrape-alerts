@@ -198,7 +198,7 @@ class Scraper(ScrapeTiming):
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
 
-    def _get_target_text(self):
+    async def _get_target_text(self):
         """Get target variable text from site.
 
         Args:
@@ -249,7 +249,7 @@ class Scraper(ScrapeTiming):
 
         for i in count():
             try:
-                availability = self._get_target_text()
+                availability = await self._get_target_text()
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
                 # when to send out an alert
