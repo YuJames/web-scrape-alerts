@@ -238,14 +238,24 @@ class Scraper(ScrapeTiming):
             (str): state
         """
 
-        entry = self[item]
-        if entry is None:
-            return
-        recipient = entry["subscribers"]
-        url = path.join(self.domain, entry["path"])
-        run_id = f"{self.id}::{item}::{url}"
+        while True:
+            try:
+                entry = self[item]
+                if entry is None:
+                    return
+                recipient = entry["subscribers"]
+                url = path.join(self.domain, entry["path"])
+                run_id = f"{self.id}::{item}::{url}"
 
-        self.reconnect(url)
+                self.reconnect(url)
+
+                break
+            except Exception as e:
+                logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
+                self.driver.quit()
+                self.reconnect(url)
+            finally:
+                await sleep(self.poll_time)
 
         for i in count():
             try:
