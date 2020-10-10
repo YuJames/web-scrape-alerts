@@ -127,7 +127,7 @@ class ScraperFactory():
             database_file (str): file path for database of urls, items, and subscriptions
         """
 
-        self.scrapers_classes = [AmazonScraper, ClairesScraper, CollectableMadnessScraper, BathBodyWorksScraper]
+        self.scrapers_classes = [AmazonScraper, ClairesScraper, CollectableMadnessScraper, BathBodyWorksScraper, BestBuyScraper]
 
         with open(file=CONFIG_FILE, mode="r") as f:
             self.database = load(fp=f)
