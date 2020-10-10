@@ -312,6 +312,10 @@ class BathBodyWorksScraper(Scraper):
     domain = "https://www.bathandbodyworks.com"
     xpath = "//div[@class='availability-msg']"
 
+class BestBuyScraper(Scraper):
+    domain = "https://www.bestbuy.com"
+    xpath = "(//div[@class='fulfillment-add-to-cart-button'])[1]"
+
 async def main():
     # create scrapers
     factory = ScraperFactory(
