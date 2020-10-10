@@ -55,8 +55,8 @@ class ScrapeTiming:
     def __init__(self):
         self.sleep_time = 5
         self.poll_time = 10
-        self.max_refreshes = 10
-        self.max_wait_time = 20
+        self.max_refreshes = 5
+        self.max_wait_time = 10
 
 
 class Emailer(EmailTiming):
