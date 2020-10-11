@@ -53,7 +53,7 @@ class EmailTiming:
 
 class ScrapeTiming:
     def __init__(self):
-        self.sleep_time = 10
+        self.sleep_time = 15
         self.poll_time = 10
         self.max_refreshes = 5
         self.max_wait_time = 10
@@ -207,10 +207,10 @@ class Scraper(ScrapeTiming):
             (str): text
         """
 
+        await sleep(self.sleep_time)
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
-        await sleep(self.sleep_time)
         availability = element.text
         self.driver.refresh()
 
