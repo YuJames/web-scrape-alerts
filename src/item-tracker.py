@@ -127,7 +127,10 @@ class ScraperFactory():
             database_file (str): file path for database of urls, items, and subscriptions
         """
 
-        self.scrapers_classes = [AmazonScraper, ClairesScraper, CollectableMadnessScraper, BathBodyWorksScraper, BestBuyScraper]
+        self.scrapers_classes = [
+            AmazonScraper, ClairesScraper, CollectableMadnessScraper, BathBodyWorksScraper, BestBuyScraper,
+            FiveBelowScraper
+        ]
 
         with open(file=CONFIG_FILE, mode="r") as f:
             self.database = load(fp=f)
@@ -315,6 +318,10 @@ class BathBodyWorksScraper(Scraper):
 class BestBuyScraper(Scraper):
     domain = "https://www.bestbuy.com"
     xpath = "(//div[@class='fulfillment-add-to-cart-button'])[1]"
+
+class FiveBelowScraper(Scraper):
+    domain = "https://www.fivebelow.com"
+    xpath = "//button[@data-cy='buyBox__addToCartButton']"
 
 async def main():
     # create scrapers
