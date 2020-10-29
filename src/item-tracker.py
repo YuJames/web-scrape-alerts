@@ -206,7 +206,7 @@ class Scraper(ScrapeTiming):
         self.driver = Firefox(
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
             options=self.options,
-            firefox_profile=profile
+            firefox_profile=self.profile
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
