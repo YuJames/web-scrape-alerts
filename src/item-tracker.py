@@ -22,7 +22,7 @@ from uuid import (
 
 from selenium.webdriver import (
     Firefox,
-    FireFoxProfile
+    FirefoxProfile
 )
 from selenium.webdriver.common.by import (
     By
@@ -173,7 +173,7 @@ class Scraper(ScrapeTiming):
         self.id = str(uuid4())[-12:]
         self.options = Options()
         self.options.headless = True
-        self.profile = FireFoxProfile()
+        self.profile = FirefoxProfile()
         self.profile.set_preference("dom.disable_beforeunload", True)
         self.profile.set_preference("browser.tabs.warnOnClose", False)
         self.driver = None
