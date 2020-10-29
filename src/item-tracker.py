@@ -55,7 +55,7 @@ class ScrapeTiming:
     def __init__(self):
         self.sleep_time = 15
         self.poll_time = 10
-        self.max_refreshes = 5
+        self.max_refreshes = 3
         self.max_wait_time = 10
 
 
