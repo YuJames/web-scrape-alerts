@@ -174,8 +174,8 @@ class Scraper(ScrapeTiming):
         self.options = Options()
         self.options.headless = True
         self.profile = FirefoxProfile()
-        self.profile.set_preference("dom.disable_beforeunload", True)
-        self.profile.set_preference("browser.tabs.warnOnClose", False)
+        # self.profile.set_preference("dom.disable_beforeunload", True)
+        # self.profile.set_preference("browser.tabs.warnOnClose", False)
         self.driver = None
         self.waiter = None
 
