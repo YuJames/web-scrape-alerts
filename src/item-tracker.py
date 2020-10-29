@@ -20,8 +20,9 @@ from uuid import (
     uuid4
 )
 
-from selenium import (
-    webdriver
+from selenium.webdriver import (
+    Firefox,
+    FireFoxProfile
 )
 from selenium.webdriver.common.by import (
     By
@@ -172,6 +173,9 @@ class Scraper(ScrapeTiming):
         self.id = str(uuid4())[-12:]
         self.options = Options()
         self.options.headless = True
+        self.profile = FireFoxProfile()
+        self.profile.set_preference("dom.disable_beforeunload", True)
+        self.profile.set_preference("browser.tabs.warnOnClose", False)
         self.driver = None
         self.waiter = None
 
@@ -199,9 +203,10 @@ class Scraper(ScrapeTiming):
         except Exception as e:
             pass
 
-        self.driver = webdriver.Firefox(
+        self.driver = Firefox(
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
-            options=self.options
+            options=self.options,
+            firefox_profile=profile
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
