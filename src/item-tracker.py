@@ -194,6 +194,11 @@ class Scraper(ScrapeTiming):
             (None)
         """
 
+        try:
+            self.driver.quit()
+        except Exception as e:
+            pass
+
         self.driver = webdriver.Firefox(
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
             options=self.options
@@ -255,7 +260,6 @@ class Scraper(ScrapeTiming):
                 break
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
-                self.driver.quit()
                 self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
@@ -287,11 +291,9 @@ class Scraper(ScrapeTiming):
                 self.stock_state = availability
 
                 if i % self.max_refreshes == 0:
-                    self.driver.quit()
                     self.reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
-                self.driver.quit()
                 self.reconnect(url)
             finally:
                 await sleep(self.poll_time)
