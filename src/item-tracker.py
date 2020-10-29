@@ -173,7 +173,7 @@ class Scraper(ScrapeTiming):
         self.id = str(uuid4())[-12:]
         self.options = Options()
         self.options.headless = True
-        self.profile = FirefoxProfile()
+        # self.profile = FirefoxProfile()
         # self.profile.set_preference("dom.disable_beforeunload", True)
         # self.profile.set_preference("browser.tabs.warnOnClose", False)
         self.driver = None
@@ -205,8 +205,8 @@ class Scraper(ScrapeTiming):
 
         self.driver = Firefox(
             executable_path=path.join(PROJECT_ROOT, "geckodriver"),
-            options=self.options,
-            firefox_profile=self.profile
+            options=self.options
+            # firefox_profile=self.profile
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
