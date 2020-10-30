@@ -20,6 +20,9 @@ from uuid import (
     uuid4
 )
 
+from fastcore.utils import (
+    store_attr
+)
 from selenium.webdriver import (
     Firefox,
     FirefoxProfile
@@ -48,16 +51,27 @@ CONFIG_FILE = path.join(PROJECT_ROOT, "database.json")
 
 
 class EmailTiming:
-    def __init__(self):
-        self.max_retries = 3
+    def __init__(self, max_retries=3):
+        """Determine email timing values.
 
+        Args:
+            max_retries (int): maximum action attempts before terminating
+        """
+
+        store_attr()
 
 class ScrapeTiming:
-    def __init__(self):
-        self.sleep_time = 15
-        self.poll_time = 10
-        self.max_refreshes = 3
-        self.max_wait_time = 10
+    def __init__(self, site_load_time=15, poll_time=10, max_refreshes=3, max_wait_time=10):
+        """Determine scrape timing values.
+
+        Args:
+            site_load_time (int): wait time for a site to load before scraping
+            poll_time (int): wait time between scraping a site
+            max_refreshes (int): maximum site refreshes before reconnecting
+            max_wait_time (int): maximum wait time for a site element to be found during scraping
+        """
+
+        store_attr()
 
 
 class Emailer(EmailTiming):
@@ -73,12 +87,7 @@ class Emailer(EmailTiming):
         """
 
         super().__init__()
-
-        self.server = server
-        self.port = port
-        self.sender = sender
-        self.sender_pass = sender_pass
-        self.recipient = recipient
+        store_attr()
 
     def send_email(self, subject, message, recipient=None):
         """Send an email.
@@ -128,14 +137,11 @@ class ScraperFactory():
             database_file (str): file path for database of urls, items, and subscriptions
         """
 
-        self.scrapers_classes = [
-            AmazonScraper, ClairesScraper, CollectableMadnessScraper, BathBodyWorksScraper, BestBuyScraper,
-            FiveBelowScraper
-        ]
+        store_attr()
 
-        with open(file=CONFIG_FILE, mode="r") as f:
-            self.database = load(fp=f)
-        self.emailer_configs = emailer_configs
+        with open(file=CONFIG_FILE, mode="r") as f: self.database = load(fp=f)
+        self.scrapers_classes = [x.__name__ for x in Scraper.__subclasses__()]
+
 
     def create_scrapers(self):
         """Create a scraper.
@@ -169,6 +175,7 @@ class Scraper(ScrapeTiming):
         """
 
         super().__init__()
+        store_attr()
 
         self.id = str(uuid4())[-12:]
         self.options = Options()
@@ -178,9 +185,6 @@ class Scraper(ScrapeTiming):
         # self.profile.set_preference("browser.tabs.warnOnClose", False)
         self.driver = None
         self.waiter = None
-
-        self.emailer = emailer
-        self.items = items
 
     def __getitem__(self, key):
         for i in self.items:
@@ -220,7 +224,7 @@ class Scraper(ScrapeTiming):
             (str): text
         """
 
-        await sleep(self.sleep_time)
+        await sleep(self.site_load_time)
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
