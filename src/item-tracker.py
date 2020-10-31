@@ -234,7 +234,7 @@ class Scraper(ScrapeTiming):
         availability = sub(
             pattern=r"\s",
             repl=" ",
-            str=element.text
+            string=element.text
         )
         self.driver.refresh()
 
