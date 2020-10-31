@@ -143,7 +143,7 @@ class ScraperFactory():
         store_attr()
 
         with open(file=CONFIG_FILE, mode="r") as f: self.database = load(fp=f)
-        self.scrapers_classes = [x.__name__ for x in Scraper.__subclasses__()]
+        self.scrapers_classes = [x for x in Scraper.__subclasses__()]
 
 
     def create_scrapers(self):
