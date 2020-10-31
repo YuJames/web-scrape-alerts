@@ -13,6 +13,9 @@ from os import (
     environ,
     path
 )
+from re import (
+    sub
+)
 from smtplib import (
     SMTP
 )
@@ -228,7 +231,11 @@ class Scraper(ScrapeTiming):
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
-        availability = element.text
+        availability = sub(
+            pattern=r"\s",
+            repl=" ",
+            str=element.text
+        )
         self.driver.refresh()
 
         return availability
