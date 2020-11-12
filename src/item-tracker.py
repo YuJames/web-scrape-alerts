@@ -76,7 +76,6 @@ class ScrapeTiming:
 
         store_attr()
 
-
 class Emailer(EmailTiming):
     def __init__(self, server, port, sender, sender_pass, recipient=None):
         """Sends emails.
@@ -163,7 +162,6 @@ class ScraperFactory():
                     scrapers.append(k(emailer=Emailer(**self.emailer_configs), items=j))
 
         return scrapers
-
 
 class Scraper(ScrapeTiming):
     domain = ""
@@ -318,16 +316,13 @@ class AmazonScraper(Scraper):
     domain = "https://www.amazon.co.jp"
     xpath = "//*[@id='availability']/child::span[1]"
 
-
 class ClairesScraper(Scraper):
     domain = "https://www.claires.com"
     xpath = "//*[@class='product-info-container']//child::p"
 
-
 class CollectableMadnessScraper(Scraper):
     domain = "https://www.collectiblemadness.com.au"
     xpath = "//div[@class='product-form__payment-container']/button[1]"
-
 
 class BathBodyWorksScraper(Scraper):
     domain = "https://www.bathandbodyworks.com"
@@ -340,6 +335,10 @@ class BestBuyScraper(Scraper):
 class FiveBelowScraper(Scraper):
     domain = "https://www.fivebelow.com"
     xpath = "//button[@data-cy='buyBox__addToCartButton']"
+
+class LandrysScraper(Scraper):
+    domain = "https://shop.landrysinc.com"
+    xpath = "//div[@data-section-type='collection-template']"
 
 async def main():
     # create scrapers

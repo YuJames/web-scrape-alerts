@@ -45,5 +45,12 @@
             "path": "products/squishmallows-8in-series-23?fbclid=IwAR0xyAiKo4OvFYtFRAYYuLNLeymWsV40O1AFnMuXjFkBGZ8Rr4-1xMFcH5k",
             "subscribers": []
         }
+    ],
+    "https://shop.landrysinc.com": [
+        {
+            "name": "squishmallow results",
+            "path": "search?type=product%2Carticle%2Cpage&q=Squishmallow&fbclid=IwAR3weiJ6LP1MMnOFu0BbZjkP5GlCmqNN1WJgf1PrwpOCfjPIuWV01VdDffg",
+            "subscribers": ["jennifer.nguyen.130@gmail.com"]
+        }
     ]
 }
