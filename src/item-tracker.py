@@ -340,6 +340,10 @@ class LandrysScraper(Scraper):
     domain = "https://shop.landrysinc.com"
     xpath = "//div[@data-section-type='collection-template']"
 
+class PlaystationScraper(Scraper):
+    domain = "https://direct.playstation.com"
+    xpath = "//producthero-info//div[@class='button-placeholder']//button[@aria-label='Add to Cart']"
+
 async def main():
     # create scrapers
     factory = ScraperFactory(
