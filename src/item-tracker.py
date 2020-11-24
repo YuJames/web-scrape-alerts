@@ -274,7 +274,7 @@ class Scraper(ScrapeTiming):
                 if entry is None:
                     return
                 recipient = entry["subscribers"]
-                url = quote_plus(path.join(self.domain, entry["path"]), safe="/")
+                url = quote_plus(path.join(self.domain, entry["path"]), safe="/:?=")
                 run_id = f"{self.id}::{item}::{url}"
 
                 self.reconnect(url)
