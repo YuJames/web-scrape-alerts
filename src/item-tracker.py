@@ -166,6 +166,7 @@ class ScraperFactory():
 class Scraper(ScrapeTiming):
     domain = ""
     xpath = ""
+    e_property = None
 
     def __init__(self, emailer, items):
         """Base class for scraping.
@@ -216,7 +217,7 @@ class Scraper(ScrapeTiming):
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
 
-    async def _get_target_text(self):
+    async def _get_target_text(self, e_property=None):
         """Get target variable text from site.
 
         Args:
@@ -229,10 +230,14 @@ class Scraper(ScrapeTiming):
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
+        if e_property is not None:
+            text = element.get_property(e_property)
+        else:
+            text = element.text
         availability = sub(
             pattern=r"\s",
             repl=" ",
-            string=element.text
+            string=text
         )
         self.driver.refresh()
 
@@ -280,7 +285,7 @@ class Scraper(ScrapeTiming):
 
         for i in count():
             try:
-                availability = await self._get_target_text()
+                availability = await self._get_target_text(self.e_property)
                 # record scrape attempt after no scrape-related failures
                 logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
                 # when to send out an alert
@@ -343,6 +348,11 @@ class LandrysScraper(Scraper):
 class PlaystationScraper(Scraper):
     domain = "https://direct.playstation.com"
     xpath = "//producthero-info//div[@class='button-placeholder']//button[@aria-label='Add to Cart']"
+
+class CostcoScraper(Scraper):
+    domain = "https://www.costco.com"
+    xpath = "//input[@id='add-to-cart-btn']"
+    e_property = "value"
 
 async def main():
     # create scrapers

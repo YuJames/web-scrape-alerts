@@ -59,5 +59,12 @@
             "path": "en-us/consoles/console/playstation5-console.3005816?fbclid=IwAR1mfKCU6vGKcA1e0M4eTe0DtNlNOUIwBH-0l5ZmJnJXs-KJCNHMHk9d0zw",
             "subscribers": []
         }
+    ],
+    "https://www.costco.com": [
+        {
+            "name": "20 in baby yoda",
+            "path": "20”-star-wars-the-child-squishmallows-plush.product.100691776.html?fbclid=IwAR0rkThkNVaZ5uOoVBk1c75doFzQkPYA0WNVw3EzqvDVIJP5qPWiRY8Ygss",
+            "subscribers": ["jennifer.nguyen.130@gmail.com"]
+        }
     ]
 }
