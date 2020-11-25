@@ -19,9 +19,6 @@ from re import (
 from smtplib import (
     SMTP
 )
-from urllib.parse import (
-    quote_plus
-)
 from uuid import (
     uuid4
 )
@@ -274,7 +271,7 @@ class Scraper(ScrapeTiming):
                 if entry is None:
                     return
                 recipient = entry["subscribers"]
-                url = quote_plus(path.join(self.domain, entry["path"]), safe="/:?=")
+                url = path.join(self.domain, entry["path"])
                 run_id = f"{self.id}::{item}::{url}"
 
                 self.reconnect(url)
