@@ -3,7 +3,7 @@
         {
             "name": "gradient-cups",
             "path": "-/en/Starbucks-Gradient-gradaion-Overseas-delivery/dp/B07CVC7Z5C?fbclid=IwAR3SEj9VKEJVxkIUIKtEfryyf3_cgOAVea5d84vnkkjxKnwhzD-SyeKf9so",
-            "subscribers": ["jennguyenna@gmail.com"]
+            "subscribers": []
         }
     ],
     "https://www.claires.com": [
@@ -36,7 +36,7 @@
         {
             "name": "ps5 regular",
             "path": "site/sony-playstation-5-console/6426149.p?skuId=6426149",
-            "subscribers": ["jennguyenna@gmail.com"]
+            "subscribers": []
         }
     ],
     "https://www.fivebelow.com": [
@@ -50,7 +50,7 @@
         {
             "name": "squishmallow results",
             "path": "search?type=product%2Carticle%2Cpage&q=Squishmallow&fbclid=IwAR3weiJ6LP1MMnOFu0BbZjkP5GlCmqNN1WJgf1PrwpOCfjPIuWV01VdDffg",
-            "subscribers": ["jennifer.nguyen.130@gmail.com"]
+            "subscribers": []
         }
     ],
     "https://direct.playstation.com": [
@@ -64,7 +64,14 @@
         {
             "name": "20 in baby yoda",
             "path": "20%22-star-wars-the-child-squishmallows-plush.product.100691776.html?fbclid=IwAR0rkThkNVaZ5uOoVBk1c75doFzQkPYA0WNVw3EzqvDVIJP5qPWiRY8Ygss",
-            "subscribers": ["jennifer.nguyen.130@gmail.com", "richardvillatoro@live.com"]
+            "subscribers": []
+        }
+    ],
+    "https://www.smythstoys.com": [
+        {
+            "name": "50 in. pink swan",
+            "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-50cm-suneetha-the-pink-swan-plush/p/194658?fbclid=IwAR0rb0uXdpwKBQ6zzCwZvlbHBmTEnaQZ3glEhGFay-oIC5os4zyJkBEnXCE",
+            "subscribers": ["jennifer.nguyen.130@gmail.com"]
         }
     ]
 }

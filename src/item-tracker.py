@@ -354,6 +354,10 @@ class CostcoScraper(Scraper):
     xpath = "//input[@id='add-to-cart-btn']"
     e_property = "value"
 
+class SmythsScraper(Scraper):
+    domain = "https://www.smythstoys.com"
+    xpath = "//p[@class=' deliveryType homeDelivery js-stockStatus']"
+
 async def main():
     # create scrapers
     factory = ScraperFactory(
