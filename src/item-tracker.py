@@ -317,8 +317,12 @@ class Scraper(ScrapeTiming):
             finally:
                 await sleep(self.poll_time)
 
-class AmazonScraper(Scraper):
+class AmazonJpScraper(Scraper):
     domain = "https://www.amazon.co.jp"
+    xpath = "//*[@id='availability']/child::span[1]"
+
+class AmazonScraper(Scraper):
+    domain = "https://www.amazon.com"
     xpath = "//*[@id='availability']/child::span[1]"
 
 class ClairesScraper(Scraper):
