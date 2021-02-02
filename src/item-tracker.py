@@ -64,7 +64,7 @@ class EmailTiming:
         store_attr()
 
 class ScrapeTiming:
-    def __init__(self, site_load_time=20, poll_time=10, max_refreshes=3, max_wait_time=10):
+    def __init__(self, site_load_time=10, poll_time=10, max_refreshes=3, max_wait_time=10):
         """Determine scrape timing values.
 
         Args:
@@ -167,6 +167,7 @@ class Scraper(ScrapeTiming):
     domain = ""
     xpath = ""
     e_property = None
+    excluded_states = []
 
     def __init__(self, emailer, items):
         """Base class for scraping.
@@ -227,6 +228,7 @@ class Scraper(ScrapeTiming):
             N/A
         Returns:
             (str): text
+                (None): No matching text
         """
 
         await sleep(self.site_load_time)
@@ -244,7 +246,10 @@ class Scraper(ScrapeTiming):
         )
         self.driver.refresh()
 
-        return availability
+        if availability not in self.excluded_states:
+            return availability
+        else:
+            return None
 
     async def _scrape_item(self, item, initial=True):   
         """Scrape the site and send an alert when the state changes.
@@ -278,31 +283,33 @@ class Scraper(ScrapeTiming):
         for i in count():
             try:
                 availability = await self._get_target_text(self.e_property)
-                # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
-                # when to send out an alert
-                if i == 0:
-                    if initial:
+                if availability is not None:
+                    # record scrape attempt after no scrape-related failures
+                    logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
+                    # when to send out an alert
+                    if i == 0:
+                        if initial:
+                            is_sent = self.emailer.send_email(
+                                subject=f"Scraper ({item}) first run: {availability}",
+                                message=url,
+                                recipient=recipient
+                            )
+                            if not is_sent:
+                                raise Exception("Email not sent")
+                    elif availability != self.stock_state[item]:
                         is_sent = self.emailer.send_email(
-                            subject=f"Scraper ({item}) first run: {availability}",
+                            subject=f"Scraper ({item}) change detected: {availability}",
                             message=url,
                             recipient=recipient
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
-                elif availability != self.stock_state[item]:
-                    is_sent = self.emailer.send_email(
-                        subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url,
-                        recipient=recipient
-                    )
-                    if not is_sent:
-                        raise Exception("Email not sent")
-                # update stock state only after no error
-                self.stock_state[item] = availability
+                    # update stock state only after no error
+                    self.stock_state[item] = availability
 
                 if i % self.max_refreshes == 0:
                     self._reconnect(url)
+
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
                 self._reconnect(url)
