@@ -188,6 +188,8 @@ class Scraper(ScrapeTiming):
         self.driver = None
         self.waiter = None
 
+        self.stock_state = {}
+
     def __getitem__(self, key):
         for i in self.items:
             if i["name"] == key:
@@ -195,7 +197,7 @@ class Scraper(ScrapeTiming):
         else:
             return None
 
-    def reconnect(self, url):
+    def _reconnect(self, url):
         """Connect to a site through a fresh connection.
 
         Args:
@@ -244,18 +246,7 @@ class Scraper(ScrapeTiming):
 
         return availability
 
-    async def scrape_all_items(self, initial=True):
-        """Get valid coroutines to run.
-
-        Args:
-            initial (bool): send initial email to indicate scrape start
-        Returns:
-            (list): coroutines
-        """
-
-        return [self.scrape_item(item=x["name"], initial=initial) for x in self.items]
-
-    async def scrape_item(self, item, initial=True):
+    async def _scrape_item(self, item, initial=True):   
         """Scrape the site and send an alert when the state changes.
 
         Args:
@@ -275,12 +266,12 @@ class Scraper(ScrapeTiming):
                 url = path.join(self.domain, entry["path"])
                 run_id = f"{self.id}::{item}::{url}"
 
-                self.reconnect(url)
+                self._reconnect(url)
 
                 break
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
-                self.reconnect(url)
+                self._reconnect(url)
             finally:
                 await sleep(self.poll_time)
 
@@ -299,7 +290,7 @@ class Scraper(ScrapeTiming):
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
-                elif availability != self.stock_state:
+                elif availability != self.stock_state[item]:
                     is_sent = self.emailer.send_email(
                         subject=f"Scraper ({item}) change detected: {availability}",
                         message=url,
@@ -308,15 +299,26 @@ class Scraper(ScrapeTiming):
                     if not is_sent:
                         raise Exception("Email not sent")
                 # update stock state only after no error
-                self.stock_state = availability
+                self.stock_state[item] = availability
 
                 if i % self.max_refreshes == 0:
-                    self.reconnect(url)
+                    self._reconnect(url)
             except Exception as e:
                 logger.write(ERROR, f"{run_id} - {self.__class__.__name__}.scrape_item - {repr(e)}")
-                self.reconnect(url)
+                self._reconnect(url)
             finally:
                 await sleep(self.poll_time)
+
+    async def scrape_all_items(self, initial=True):
+        """Get valid coroutines to run.
+
+        Args:
+            initial (bool): send initial email to indicate scrape start
+        Returns:
+            (list): coroutines
+        """
+
+        return [self._scrape_item(item=x["name"], initial=initial) for x in self.items]
 
 class AmazonJpScraper(Scraper):
     domain = "https://www.amazon.co.jp"
@@ -375,9 +377,10 @@ async def main():
         database_file=CONFIG_FILE
     )
     scrapers = factory.create_scrapers()
-    alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
+    print(scrapers)
+    # alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
-    await gather(*alerts)
+    # await gather(*alerts)
 
 
 if __name__ == "__main__":
