@@ -377,10 +377,9 @@ async def main():
         database_file=CONFIG_FILE
     )
     scrapers = factory.create_scrapers()
-    print(scrapers)
-    # alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
+    alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
-    # await gather(*alerts)
+    await gather(*alerts)
 
 
 if __name__ == "__main__":
