@@ -279,28 +279,29 @@ class Scraper(ScrapeTiming):
         for i in count():
             try:
                 availability = await self._get_target_text(self.e_property)
-                # record scrape attempt after no scrape-related failures
-                logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
-                # when to send out an alert
-                if i == 0:
-                    if initial:
+                if availability not in self.excluded_states[item]:
+                    # record scrape attempt after no scrape-related failures
+                    logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
+                    # when to send out an alert
+                    if i == 0:
+                        if initial:
+                            is_sent = self.emailer.send_email(
+                                subject=f"Scraper ({item}) first run: {availability}",
+                                message=url,
+                                recipient=recipient
+                            )
+                            if not is_sent:
+                                raise Exception("Email not sent")
+                    elif availability != self.stock_state[item]:
                         is_sent = self.emailer.send_email(
-                            subject=f"Scraper ({item}) first run: {availability}",
+                            subject=f"Scraper ({item}) change detected: {availability}",
                             message=url,
                             recipient=recipient
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
-                elif availability != self.stock_state[item]:
-                    is_sent = self.emailer.send_email(
-                        subject=f"Scraper ({item}) change detected: {availability}",
-                        message=url,
-                        recipient=recipient
-                    )
-                    if not is_sent:
-                        raise Exception("Email not sent")
-                # update stock state only after no error
-                self.stock_state[item] = availability
+                    # update stock state only after no error
+                    self.stock_state[item] = availability
 
                 if i % self.max_refreshes == 0:
                     self._reconnect(url)
