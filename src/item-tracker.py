@@ -216,6 +216,7 @@ class Scraper(ScrapeTiming):
         )
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
+        self.waiter.until(lambda x: x.execute_script("return document.readyState") == "complete")
 
     async def _get_target_text(self, e_property=None):
         """Get target variable text from site.
@@ -226,7 +227,7 @@ class Scraper(ScrapeTiming):
             (str): text
         """
 
-        await sleep(self.site_load_time)
+        # await sleep(self.site_load_time)
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
