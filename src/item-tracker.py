@@ -229,7 +229,7 @@ class Scraper(ScrapeTiming):
             (str): text
         """
 
-        # await sleep(self.site_load_time)
+        await sleep(self.site_load_time)
         element = self.waiter.until(
             visibility_of_element_located((By.XPATH, self.xpath))
         )
