@@ -361,7 +361,7 @@ class Scraper(ScrapeTiming):
 
         while True:
             try:
-                item_db_entry = self.items[item]
+                item_db_entry = self[item]
                 if item_db_entry is None:
                     return
                 email_subscriptions = [z for x in item_db_entry for y in x["subscribers"] for z in y["email"]]
