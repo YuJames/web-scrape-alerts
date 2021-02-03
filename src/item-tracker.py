@@ -367,8 +367,8 @@ class Scraper(ScrapeTiming):
                 url = path.join(self.domain, item_db_entry["path"])
                 run_id = f"{self.id}::{item}::{url}"
 
-                email_subscriptions = [y for x in item_db_entry["subscribers"] for y in y["email"]]
-                phone_subscriptions = [y for x in item_db_entry["subscribers"] for y in y["sms"]]
+                email_subscriptions = [y for x in item_db_entry["subscribers"] for y in x["email"]]
+                phone_subscriptions = [y for x in item_db_entry["subscribers"] for y in x["sms"]]
 
                 self._reconnect(url)
 
