@@ -501,9 +501,9 @@ async def main():
         database=database
     )
     scrapers = factory.create_scrapers()
-    # alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
+    alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
-    # await gather(*alerts)
+    await gather(*alerts)
 
 
 if __name__ == "__main__":
