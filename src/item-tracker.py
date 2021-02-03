@@ -42,6 +42,9 @@ from selenium.webdriver.support.expected_conditions import (
 from selenium.webdriver.support.ui import (
     WebDriverWait
 )
+from twilio.rest import (
+    Client
+)
 
 from logger import (
     logger,
@@ -50,8 +53,8 @@ from logger import (
 
 
 PROJECT_ROOT = environ["PROJECT_ROOT"]
-CONFIG_FILE = path.join(PROJECT_ROOT, "database.json")
-
+CONFIG_FILE = path.join(PROJECT_ROOT, "items.json")
+SUBSCRIBERS_FILE = path.join(PROJECT_ROOT, "subscribers.json")
 
 class EmailTiming:
     def __init__(self, max_retries=3):
@@ -130,23 +133,115 @@ class Emailer(EmailTiming):
 
         return True
 
-class ScraperFactory():
-    def __init__(self, emailer_configs, database_file):
-        """Factory class for creating specific scrapers.
+class Messenger:
+    def __init__(self, sender, account_id, auth_token):
+        """Sends SMS.
 
         Args:
-            emailer_configs (dict): configs for email sender
-            database_file (str): file path for database of urls, items, and subscriptions
+            sender (str): sender number
+            account_id (str): twilio account id
+            auth_token (str): twilio auth token
         """
 
         store_attr()
 
-        with open(file=CONFIG_FILE, mode="r") as f: self.database = load(fp=f)
+        self.client = Client(account_id, auth_token)
+
+    def send_sms(self, message, recipient):
+        """Send a sms.
+
+        Args:
+            message (str): sms message
+            recipient (list): sms recipients
+        Returns:
+            (None)
+        """
+
+        for i in recipient:
+            self.client.messages.create(
+                body=message,
+                from_=self.sender,
+                to=i
+            )
+
+class Database:
+    def __init__(self, items_db_file, subs_db_file):
+        """Access databases for items and subscriptions.
+
+        Args:
+            items_db_file (str): file path for database of items
+            subs_db_file (str): file path for database of subscribers
+        """
+
+        store_attr()
+
+        with open(file=self.items_db_file, mode="r") as f: self.items_db = load(fp=f)
+        with open(file=self.subs_db_file, mode="r") as f: self.subs_db = load(fp=f)
+
+    def get_subscribed(self):
+        """Get items that have subscribers.
+
+        Args:
+            N/A
+        Returns:
+            (dict): items database
+        """
+                
+        subscribed = {
+            x: [z for z in y if len(z["subscribers"]) > 0]
+            for x, y in self.items_db.items()
+            if sum([len(z["subscribers"]) for z in y]) > 0
+        }
+        
+        return subscribed
+
+    def get_item(self, item):
+        """Get item description.
+
+        Args:
+            item (str): item name
+        Returns:
+            (dict): item description
+        """
+
+        all_items = [z for x, y in self.items_db.items() for z in y]
+
+        item_description = [x for x in all_items if x["name"] == item][0]
+
+        return item_description
+
+    def get_subscribers(self, item):
+        """Get subscribers to an item.
+
+        Args:
+            item (str): item name
+        Returns:
+            (list): subscribers
+        """
+
+        all_items = [z for x, y in self.items_db.items() for z in y]
+        subscribers = [y for x in all_items for y in x["subscribers"] if x["name"] == item]
+
+        subscribers_data = [self.subs_db[x] for x in subscribers]
+
+        return subscribers_data
+
+class ScraperFactory():
+    def __init__(self, emailer_configs, messenger_configs, database):
+        """Factory class for creating specific scrapers.
+
+        Args:
+            emailer_configs (dict): configs for email sender
+            messenger_configs (dict): configs for sms sender
+            database (Database): database of items and subscribers
+        """
+
+        store_attr()
+
         self.scrapers_classes = [x for x in Scraper.__subclasses__()]
 
-
     def create_scrapers(self):
-        """Create a scraper.
+        """Create scrapers.
 
         Args:
             N/A
@@ -154,12 +249,17 @@ class ScraperFactory():
             (list): subclasses of Scraper
         """
 
-        scrapers = []
-        for i, j in self.database.items():
-            for k in self.scrapers_classes:
-                items_with_subscribers = [x for x in j if len(x["subscribers"]) != 0]
-                if i == k.domain and len(items_with_subscribers) != 0:
-                    scrapers.append(k(emailer=Emailer(**self.emailer_configs), items=j))
+        combined_dbs = self.database.get_subscribed().copy()
+        for i, j in combined_dbs.items():
+            for k in j:
+                k["subscribers"] = [self.database.subs_db[x] for x in k["subscribers"]]
+
+        scrapers = [
+            z(emailer=Emailer(**self.emailer_configs), messenger=Messenger(**self.messenger_configs), items=y)
+            for x, y in combined_dbs.items()
+            for z in self.scrapers_classes
+            if x == z.domain
+        ]
 
         return scrapers
 
@@ -168,11 +268,12 @@ class Scraper(ScrapeTiming):
     xpath = ""
     e_property = None
 
-    def __init__(self, emailer, items):
+    def __init__(self, emailer, messenger, items):
         """Base class for scraping.
 
         Args:
             emailer (Emailer): emailer to use for alerts
+            messenger (Messenger): messenger to use for alerts
             items (list): list of item descriptions
         """
 
@@ -255,16 +356,18 @@ class Scraper(ScrapeTiming):
             item (str): item name
             initial (bool): send initial email to indicate scrape start
         Returns:
-            (str): state
+            (None)
         """
 
         while True:
             try:
-                entry = self[item]
-                if entry is None:
+                item_db_entry = self.items[item]
+                if item_db_entry is None:
                     return
-                recipient = entry["subscribers"]
-                url = path.join(self.domain, entry["path"])
+                email_subscriptions = [z for x in item_db_entry for y in x["subscribers"] for z in y["email"]]
+                phone_subscriptions = [z for x in item_db_entry for y in x["subscribers"] for z in y["sms"]]
+
+                url = path.join(self.domain, item_db_entry["path"])
                 run_id = f"{self.id}::{item}::{url}"
 
                 self._reconnect(url)
@@ -285,21 +388,32 @@ class Scraper(ScrapeTiming):
                     # when to send out an alert
                     if i == 0:
                         if initial:
+                            subject, message = f"Scraper ({item}) first run: {availability}", url
+                            
                             is_sent = self.emailer.send_email(
-                                subject=f"Scraper ({item}) first run: {availability}",
-                                message=url,
-                                recipient=recipient
+                                subject=subject,
+                                message=message,
+                                recipient=email_subscriptions
                             )
                             if not is_sent:
                                 raise Exception("Email not sent")
+                            self.messenger.send_sms(
+                                message=f"{subject} - {message}",
+                                recipient=phone_subscriptions
+                            )
                     elif availability != self.stock_state[item]:
+                        subject, message = f"Scraper ({item}) change detected: {availability}", url
                         is_sent = self.emailer.send_email(
-                            subject=f"Scraper ({item}) change detected: {availability}",
-                            message=url,
-                            recipient=recipient
+                            subject=subject,
+                            message=message,
+                            recipient=email_subscriptions
                         )
                         if not is_sent:
                             raise Exception("Email not sent")
+                        self.messenger.send_sms(
+                            message=f"{subject}[{message}]",
+                            recipient=phone_subscriptions
+                        )
                     # update stock state only after no error
                     self.stock_state[item] = availability
 
@@ -369,20 +483,27 @@ class SmythsScraper(Scraper):
     xpath = "//p[@class=' deliveryType homeDelivery js-stockStatus']"
 
 async def main():
-    # create scrapers
+    # initialize database
+    database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
+    # initialize scrapers
     factory = ScraperFactory(
         emailer_configs={
             "server": environ["SERVER"],
             "port": environ["PORT"],
-            "sender": environ["SENDER"],
-            "sender_pass": environ["SENDER_PASS"]
+            "sender": environ["EMAIL_SENDER"],
+            "sender_pass": environ["EMAIL_SENDER_PASS"]
         },
-        database_file=CONFIG_FILE
+        messenger_configs={
+            "sender": environ["SMS_SENDER"],
+            "account_id": environ["SMS_ACCOUNT_ID"],
+            "auth_token": environ["SMS_AUTH_TOKEN"]
+        },
+        database=database
     )
     scrapers = factory.create_scrapers()
-    alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
+    # alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
-    await gather(*alerts)
+    # await gather(*alerts)
 
 
 if __name__ == "__main__":
