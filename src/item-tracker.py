@@ -14,6 +14,7 @@ from os import (
     path
 )
 from re import (
+    search,
     sub
 )
 from smtplib import (
@@ -382,7 +383,7 @@ class Scraper(ScrapeTiming):
         for i in count():
             try:
                 availability = await self._get_target_text(self.e_property)
-                if availability not in self.excluded_states[item]:
+                if len([_ for _ in [search(pattern=x, string=availability) for x in self.excluded_states[item]] if _ is not None]) == 0:
                     # record scrape attempt after no scrape-related failures
                     logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
                     # when to send out an alert

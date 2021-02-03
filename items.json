@@ -30,7 +30,7 @@
             "name": "squishville playground set",
             "path": "dp/B08G1X6BCC/ref=cm_sw_r_cp_apa_fabc_KY435CZGFN9C0NKK0B21?fbclid=IwAR1y6hU6QmrNNwUWKJyr-a2oGznRqdtEy2aUKBbLsGqAH6sNZh_3CtnWkcI",
             "subscribers": ["jennifer nguyen"],
-            "exclude": ["In stock on March 23, 2021."]
+            "exclude": ["^In stock on .*"]
         }
     ],
     "https://www.claires.com": [
