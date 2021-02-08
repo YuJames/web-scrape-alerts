@@ -7,6 +7,7 @@ from itertools import (
     count
 )
 from json import (
+    dumps,
     load
 )
 from os import (
@@ -241,11 +242,11 @@ class ScraperFactory():
 
         self.scrapers_classes = [x for x in Scraper.__subclasses__()]
 
-    def create_scrapers(self):
+    def create_scrapers(self, confirms=1):
         """Create scrapers.
 
         Args:
-            N/A
+            confirms (int): number of repeating states for a state change
         Returns:
             (list): subclasses of Scraper
         """
@@ -256,7 +257,7 @@ class ScraperFactory():
                 k["subscribers"] = [self.database.subs_db[x] for x in k["subscribers"]]
 
         scrapers = [
-            z(emailer=Emailer(**self.emailer_configs), messenger=Messenger(**self.messenger_configs), items=y)
+            z(emailer=Emailer(**self.emailer_configs), messenger=Messenger(**self.messenger_configs), items=y, confirms=confirms)
             for x, y in combined_dbs.items()
             for z in self.scrapers_classes
             if x == z.domain
@@ -269,13 +270,14 @@ class Scraper(ScrapeTiming):
     xpath = ""
     e_property = None
 
-    def __init__(self, emailer, messenger, items):
+    def __init__(self, emailer, messenger, items, confirms=1):
         """Base class for scraping.
 
         Args:
             emailer (Emailer): emailer to use for alerts
             messenger (Messenger): messenger to use for alerts
             items (list): list of item descriptions
+            confirms (int): number of repeating states for a state change
         """
 
         super().__init__()
@@ -290,8 +292,34 @@ class Scraper(ScrapeTiming):
         self.driver = None
         self.waiter = None
 
+        self.stock_state = {
+            x["name"]: {
+                "current_state": None,
+                "pending_state": [None for _ in range(self.confirms)]
+                "excluded" = x["exclude"] for x in self.items
+            }
+        }
         self.stock_state = {}
-        self.excluded_states = {x["name"]: x["exclude"] for x in items}
+
+    def _add_state(self, item, state):
+        """Add a state to an item.
+
+        Args:
+            item (str): item name
+            state (str): availability
+        Returns:
+            (bool): if state is confirmed
+        """
+
+        self.stock_state[item]["pending_state"] = self.stock_state[item]["pending_state"][1:] + [state]
+        if (
+            all([x == self.stock_state[item]["pending_state"][0] for x in self.stock_state[item]["pending_state"]]) and
+            self.stock_state[item]["pending_state"][0] != self.stock_state[item]["current_state"] and
+            self.stock_state[item]["current_state"] is not None
+        ):
+            return True
+        else:
+            return False
 
     def __getitem__(self, key):
         for i in self.items:
@@ -322,6 +350,32 @@ class Scraper(ScrapeTiming):
         self.waiter = WebDriverWait(self.driver, self.max_wait_time)
         self.driver.get(url)
         self.waiter.until(lambda x: x.execute_script("return document.readyState") == "complete")
+
+    def _send_communications(self, subject, message, email=None, phone=None):
+        """Send all communications available.
+
+        Args:
+            subject (str): message subject
+            message (str): message body
+            email (list): email recipients
+            phone (list): sms recipients
+        Returns:
+            (None)
+        """
+
+        if email is not None:
+            is_sent = self.emailer.send_email(  
+                subject=subject,
+                message=message,
+                recipient=email
+            )
+            if not is_sent:
+                raise Exception("Email not sent")
+        if phone is not None:
+            self.messenger.send_sms(
+                message=f"{subject} - {message}",
+                recipient=phone
+            )
 
     async def _get_target_text(self, e_property=None):
         """Get target variable text from site.
@@ -383,40 +437,16 @@ class Scraper(ScrapeTiming):
         for i in count():
             try:
                 availability = await self._get_target_text(self.e_property)
-                if len([_ for _ in [search(pattern=x, string=availability) for x in self.excluded_states[item]] if _ is not None]) == 0:
-                    # record scrape attempt after no scrape-related failures
-                    logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
-                    # when to send out an alert
-                    if i == 0:
-                        if initial:
-                            subject, message = f"Scraper ({item}) first run: {availability}", url
-                            
-                            is_sent = self.emailer.send_email(
-                                subject=subject,
-                                message=message,
-                                recipient=email_subscriptions
-                            )
-                            if not is_sent:
-                                raise Exception("Email not sent")
-                            self.messenger.send_sms(
-                                message=f"{subject} - {message}",
-                                recipient=phone_subscriptions
-                            )
-                    elif availability != self.stock_state[item]:
-                        subject, message = f"Scraper ({item}) change detected: {availability}", url
-                        is_sent = self.emailer.send_email(
-                            subject=subject,
-                            message=message,
-                            recipient=email_subscriptions
-                        )
-                        if not is_sent:
-                            raise Exception("Email not sent")
-                        self.messenger.send_sms(
-                            message=f"{subject}[{message}]",
-                            recipient=phone_subscriptions
-                        )
-                    # update stock state only after no error
-                    self.stock_state[item] = availability
+                is_state_changed = self._add_state(item=item, state=availability)
+                # record scrape attempt after no scrape-related failures
+                logger.write(INFO, f"{run_id} - {self.__class__.__name__}.scrape_item run {i}: {availability}")
+                # when to send out an alert
+                if i == 0 and initial:
+                    subject, message = f"Scraper ({item}) first run: {availability}", url
+                    self._send_communications(subject=subject, message=message, email=email_subscriptions, phone=phone_subscriptions)
+                elif is_state_changed:
+                    subject, message = f"Scraper ({item}) change detected: {availability}", url
+                    self._send_communications(subject=subject, message=message, email=email_subscriptions, phone=phone_subscriptions)
 
                 if i % self.max_refreshes == 0:
                     self._reconnect(url)
@@ -501,8 +531,8 @@ async def main():
         },
         database=database
     )
-    scrapers = factory.create_scrapers()
     alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
+    scrapers = factory.create_scrapers(confirms=2)
 
     await gather(*alerts)
 
