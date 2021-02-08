@@ -295,7 +295,7 @@ class Scraper(ScrapeTiming):
         self.stock_state = {
             x["name"]: {
                 "current_state": None,
-                "pending_state": [None for _ in range(self.confirms)]
+                "pending_state": [None for _ in range(self.confirms)],
                 "excluded" = x["exclude"] for x in self.items
             }
         }
