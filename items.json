@@ -30,7 +30,7 @@
             "name": "squishville playground set",
             "path": "dp/B08G1X6BCC/ref=cm_sw_r_cp_apa_fabc_KY435CZGFN9C0NKK0B21?fbclid=IwAR1y6hU6QmrNNwUWKJyr-a2oGznRqdtEy2aUKBbLsGqAH6sNZh_3CtnWkcI",
             "subscribers": ["jennifer nguyen"],
-            "exclude": ["^In stock on .*"]
+            "exclude": []
         }
     ],
     "https://www.claires.com": [
@@ -107,6 +107,18 @@
         {
             "name": "50 in. pink swan",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-50cm-suneetha-the-pink-swan-plush/p/194658?fbclid=IwAR0rb0uXdpwKBQ6zzCwZvlbHBmTEnaQZ3glEhGFay-oIC5os4zyJkBEnXCE",
+            "subscribers": ["jennifer nguyen"],
+            "exclude": []
+        },
+        {
+            "name": "30 cm. janet jellyfish",
+            "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-30cm-janet-jellyfish-plush/p/193271?fbclid=IwAR3OKE1pLj_OLsEipgnnOv-F-pmdL4xpgJxJJ5WHJ0EhsPDtgO9lLNGr8hk",
+            "subscribers": ["jennifer nguyen"],
+            "exclude": []
+        },
+        {
+            "name": "40 cm. xandra mint crab",
+            "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-40cm-xandra-the-mint-crab-plush/p/194657?fbclid=IwAR2sOaHZbOFs7ww_LXqhkeFQI6_2-dMNrS46yOG072AO6tAQc1gXTnXjhZU",
             "subscribers": ["jennifer nguyen"],
             "exclude": []
         }
