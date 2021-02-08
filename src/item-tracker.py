@@ -296,10 +296,10 @@ class Scraper(ScrapeTiming):
             x["name"]: {
                 "current_state": None,
                 "pending_state": [None for _ in range(self.confirms)],
-                "excluded" = x["exclude"] for x in self.items
+                "excluded": x["exclude"]
             }
+            for x in self.items
         }
-        self.stock_state = {}
 
     def _add_state(self, item, state):
         """Add a state to an item.
