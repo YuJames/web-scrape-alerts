@@ -316,7 +316,7 @@ class Scraper(ScrapeTiming):
             all([x == self.stock_state[item]["pending_state"][0] for x in self.stock_state[item]["pending_state"]]) and
             self.stock_state[item]["pending_state"][0] != self.stock_state[item]["current_state"]
         ):
-            self.stock_State[item]["current_state"] = state
+            self.stock_state[item]["current_state"] = state
 
             return True
         else:
