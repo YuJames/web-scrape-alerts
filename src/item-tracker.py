@@ -316,9 +316,10 @@ class Scraper(ScrapeTiming):
             all([x == self.stock_state[item]["pending_state"][0] for x in self.stock_state[item]["pending_state"]]) and
             self.stock_state[item]["pending_state"][0] != self.stock_state[item]["current_state"]
         ):
+            previous_state = self.stock_state[item]["current_state"]
             self.stock_state[item]["current_state"] = state
 
-            return True
+            return True if previous_state is not None else False
         else:
             return False
 
