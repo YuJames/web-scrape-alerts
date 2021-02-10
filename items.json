@@ -11,13 +11,13 @@
         {
             "name": "blue axolotl",
             "path": "Squishmallow-Official-Kellytoy-Plush-Axolotl/dp/B08G1WVWPL?ref_=ast_sto_dp",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         },
         {
             "name": "pink axolotl",
             "path": "dp/B08G1YJJ5F/ref=cm_sw_r_cp_apa_fabc_M0J2ENVJR9K9YS895ZCJ?fbclid=IwAR0B34qRDS2LTOaHg4jWEaz4xEOVegQOGfZMFUUIo5bGM_CMeW6I8skyLpc",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         },
         {
@@ -29,7 +29,7 @@
         {
             "name": "squishville playground set",
             "path": "dp/B08G1X6BCC/ref=cm_sw_r_cp_apa_fabc_KY435CZGFN9C0NKK0B21?fbclid=IwAR1y6hU6QmrNNwUWKJyr-a2oGznRqdtEy2aUKBbLsGqAH6sNZh_3CtnWkcI",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         }
     ],
@@ -107,19 +107,33 @@
         {
             "name": "50 in. pink swan",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-50cm-suneetha-the-pink-swan-plush/p/194658?fbclid=IwAR0rb0uXdpwKBQ6zzCwZvlbHBmTEnaQZ3glEhGFay-oIC5os4zyJkBEnXCE",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         },
         {
             "name": "30 cm. janet jellyfish",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-30cm-janet-jellyfish-plush/p/193271?fbclid=IwAR3OKE1pLj_OLsEipgnnOv-F-pmdL4xpgJxJJ5WHJ0EhsPDtgO9lLNGr8hk",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         },
         {
             "name": "40 cm. xandra mint crab",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-40cm-xandra-the-mint-crab-plush/p/194657?fbclid=IwAR2sOaHZbOFs7ww_LXqhkeFQI6_2-dMNrS46yOG072AO6tAQc1gXTnXjhZU",
-            "subscribers": ["jennifer nguyen"],
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        }
+    ],
+    "https://www.walmart.com": [
+        {
+            "name": "12 in. pink axolotl",
+            "path": "ip/Squishmallow-12IN-Plush-Axolotl/184699190?fbclid=IwAR2jhPSE2TprCXhEkxhK-qtaqQKHAOptgtiEU4r-T9y40HqY-zmkvSpxxz8",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        },
+        {
+            "name": "16 in. blue axolotl",
+            "path": "ip/Squishmallow-16IN-Plush-Axolotl/292959173?fbclid=IwAR1ytif-zUuKVcLcgoU3zVLQUFxLrWyEq8wV3ZTH1h-ZhgDrxWRlYVvA9DA",
+            "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         }
     ]

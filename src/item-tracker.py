@@ -515,6 +515,10 @@ class SmythsScraper(Scraper):
     domain = "https://www.smythstoys.com"
     xpath = "//p[@class=' deliveryType homeDelivery js-stockStatus']"
 
+class WalmartScraper(Scraper):
+    domain = "https://www.walmart.com"
+    xpath = "//span[@class='spin-button-children']"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
