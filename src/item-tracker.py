@@ -518,7 +518,7 @@ class SmythsScraper(Scraper):
 
 class WalmartScraper(Scraper):
     domain = "https://www.walmart.com"
-    xpath = "//span[@class='spin-button-children']"
+    xpath = "//div[@class='fulfillment-buy-box-update']"
 
 async def main():
     # initialize database
