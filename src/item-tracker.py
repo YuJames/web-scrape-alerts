@@ -286,6 +286,7 @@ class Scraper(ScrapeTiming):
         self.id = str(uuid4())[-12:]
         self.options = Options()
         self.options.headless = True
+        self.options.add_argument("start-maximized")
         # self.profile = FirefoxProfile()
         # self.profile.set_preference("dom.disable_beforeunload", True)
         # self.profile.set_preference("browser.tabs.warnOnClose", False)
