@@ -136,5 +136,13 @@
             "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         }
+    ],
+    "https://www.booksamillion.com": [
+        {
+            "name": "blue frog",
+            "path": "p/BAM-Exclusive-Frog-Squishmallow/Squishmallow/F734689236480",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        }
     ]
 }

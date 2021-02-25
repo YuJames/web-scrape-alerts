@@ -39,6 +39,7 @@ from selenium.webdriver.firefox.options import (
     Options
 )
 from selenium.webdriver.support.expected_conditions import (
+    visibility_of_all_elements_located,
     visibility_of_element_located
 )
 from selenium.webdriver.support.ui import (
@@ -390,13 +391,13 @@ class Scraper(ScrapeTiming):
         """
 
         await sleep(self.site_load_time)
-        element = self.waiter.until(
-            visibility_of_element_located((By.XPATH, self.xpath))
+        elements = self.waiter.until(
+            visibility_of_all_elements_located((By.XPATH, self.xpath))
         )
         if e_property is not None:
-            text = element.get_property(e_property)
+            text = "::".join([x.get_property(e_property) for x in elements])
         else:
-            text = element.text
+            text = "::".join([x.text for x in elements])
         availability = sub(
             pattern=r"\s",
             repl=" ",
@@ -519,6 +520,10 @@ class SmythsScraper(Scraper):
 class WalmartScraper(Scraper):
     domain = "https://www.walmart.com"
     xpath = "//span[@class='spin-button-children']"
+
+class BAMScraper(Scraper):
+    domain = "https://www.booksamillion.com"
+    xpath = "//div[@class='productAvailableText']"
 
 async def main():
     # initialize database
