@@ -525,6 +525,10 @@ class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"
     xpath = "//div[@class='productAvailableText']"
 
+class OwlGooseGiftScraper(Scraper):
+    domain = "https://owlandgoosegifts.com"
+    xpath = "//span[@data-add-to-cart-text='']"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
