@@ -77,6 +77,12 @@
             "path": "products/squishmallows-8in-series-23",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "4.5 in easter squish",
+            "path": "products/easter-squishmallows-4-5in",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
         }
     ],
     "https://shop.landrysinc.com": [

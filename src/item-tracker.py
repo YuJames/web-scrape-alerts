@@ -70,7 +70,7 @@ class EmailTiming:
         store_attr()
 
 class ScrapeTiming:
-    def __init__(self, site_load_time=10, poll_time=10, max_refreshes=3, max_wait_time=10):
+    def __init__(self, site_load_time=5, poll_time=5, max_refreshes=5, max_wait_time=5):
         """Determine scrape timing values.
 
         Args:
