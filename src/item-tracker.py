@@ -529,6 +529,10 @@ class OwlGooseGiftScraper(Scraper):
     domain = "https://owlandgoosegifts.com"
     xpath = "//span[@data-add-to-cart-text='']"
 
+class QueeniesCardsScraper(Scraper):
+    domain = "https://queeniescards.com"
+    xpath = "//button[@id='AddToCart']"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)

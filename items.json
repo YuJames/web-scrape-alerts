@@ -158,5 +158,19 @@
             "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         }
+    ],
+    "https://queeniescards.com": [
+        {
+            "name": "7 in duck",
+            "path": "collections/squishmallows/products/7-squishmallow-mallard-duck-plush?variant=37521984192668",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        },
+        {
+            "name": "3.5 in cow clip",
+            "path": "collections/squishmallows/products/3-5-squishmallow-cow-backpack-clip?variant=37262355366044",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        }
     ]
 }
