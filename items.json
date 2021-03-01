@@ -172,5 +172,13 @@
             "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
         }
+    ],
+    "https://queeniescards.com/collections": [
+        {
+            "name": "first item",
+            "path": "squishmallows?sort_by=created-descending",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
+        }
     ]
 }
