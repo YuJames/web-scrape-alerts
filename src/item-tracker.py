@@ -534,7 +534,7 @@ class QueeniesCardsScraper(Scraper):
     xpath = "//button[@id='AddToCart']"
 
 class QueeniesCardsSortedScraper(Scraper):
-    domain = "https://queeniescards.com/collections",
+    domain = "https://queeniescards.com/collections"
     xpath = "(//p[@class='grid-link__title'])[1]"
 
 async def main():
