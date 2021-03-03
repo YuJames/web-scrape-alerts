@@ -157,6 +157,12 @@
             "path": "collections/easter-squishmallows/products/coming-soon-5-belana-the-cow-easter-squishmallow",
             "subscribers": ["jennifer nguyen", "self", "ashley palaroan", "ariel nguyen"],
             "exclude": []
+        },
+        {
+            "name": "7 in bart bat",
+            "path": "collections/7-squishmallows/products/7-bart-the-bat-halloween-squishmallow",
+            "subscribers": ["jennifer nguyen", "self"],
+            "exclude": []
         }
     ],
     "https://queeniescards.com": [
