@@ -11,13 +11,13 @@
         {
             "name": "blue axolotl",
             "path": "Squishmallow-Official-Kellytoy-Plush-Axolotl/dp/B08G1WVWPL?ref_=ast_sto_dp",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "pink axolotl",
             "path": "dp/B08G1YJJ5F/ref=cm_sw_r_cp_apa_fabc_M0J2ENVJR9K9YS895ZCJ",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
@@ -29,7 +29,7 @@
         {
             "name": "squishville playground set",
             "path": "dp/B08G1X6BCC/ref=cm_sw_r_cp_apa_fabc_KY435CZGFN9C0NKK0B21",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -81,7 +81,7 @@
         {
             "name": "4.5 in easter squish",
             "path": "products/easter-squishmallows-4-5in",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -113,19 +113,19 @@
         {
             "name": "50 in. pink swan",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-50cm-suneetha-the-pink-swan-plush/p/194658",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "30 cm. janet jellyfish",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-30cm-janet-jellyfish-plush/p/193271",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "40 cm. xandra mint crab",
             "path": "uk/en-gb/toys/fashion-and-dolls/squishmallows/squishmallows-wave-5-40cm-xandra-the-mint-crab-plush/p/194657",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -133,13 +133,13 @@
         {
             "name": "12 in. pink axolotl",
             "path": "ip/Squishmallow-12IN-Plush-Axolotl/184699190",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "16 in. blue axolotl",
             "path": "ip/Squishmallow-16IN-Plush-Axolotl/292959173",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -155,7 +155,7 @@
         {
             "name": "5 in easter cow",
             "path": "collections/easter-squishmallows/products/coming-soon-5-belana-the-cow-easter-squishmallow",
-            "subscribers": ["jennifer nguyen", "self", "ashley palaroan", "ariel nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
@@ -163,6 +163,11 @@
             "path": "collections/7-squishmallows/products/7-bart-the-bat-halloween-squishmallow",
             "subscribers": ["jennifer nguyen", "self"],
             "exclude": []
+        },
+        {
+            "name": "12 in easter cow",
+            "path": "collections/easter-squishmallows/products/12-belana-the-cow-easter-squishmallow",
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"]
         }
     ],
     "https://queeniescards.com": [
@@ -183,7 +188,7 @@
         {
             "name": "first item",
             "path": "squishmallows?sort_by=created-descending",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ]
