@@ -167,7 +167,8 @@
         {
             "name": "12 in easter cow",
             "path": "collections/easter-squishmallows/products/12-belana-the-cow-easter-squishmallow",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"]
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "exclude": []
         }
     ],
     "https://queeniescards.com": [
