@@ -555,7 +555,7 @@ async def main():
         },
         database=database
     )
-    scrapers = factory.create_scrapers(confirms=2)
+    scrapers = factory.create_scrapers(confirms=1)
     alerts = [y for x in scrapers for y in await x.scrape_all_items(False)]
 
     await gather(*alerts)
