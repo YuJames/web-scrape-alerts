@@ -1,0 +1,92 @@
+[
+  {
+    "Feature": "gdp",
+    "Column Number": 1,
+    "Pretty Name": "GDP",
+    "Description": "GDP of the most recent year available"
+  },
+  {
+    "Feature": "gdp_pct",
+    "Column Number": 2,
+    "Pretty Name": "GDP percent change",
+    "Description": "GDP percent change from previous year"
+  },
+  {
+    "Feature": "gdp_delta",
+    "Column Number": 3,
+    "Pretty Name": "GDP change",
+    "Description": "GDP absolute change from previous year"
+  },
+  {
+    "Feature": "gdp_per_capita",
+    "Column Number": 4,
+    "Pretty Name": "GDP per capita",
+    "Description": "GDP per capita"
+  },
+  {
+    "Feature": "r_gdp",
+    "Column Number": 5,
+    "Pretty Name": "Real GDP",
+    "Description": "GDP of the most recent year available and is adjusted to inflation"
+  },
+  {
+    "Feature": "r_gdp_pct",
+    "Column Number": 6,
+    "Pretty Name": "Real GDP percent change",
+    "Description": "Real GDP percent change from previous year"
+  },
+  {
+    "Feature": "r_gdp_delta",
+    "Column Number": 7,
+    "Pretty Name": "Real GDP chage",
+    "Description": "Real GDP absolute change from previous year"
+  },
+  {
+    "Feature": "r_income",
+    "Column Number": 8,
+    "Pretty Name": "Real Personal Income",
+    "Description": "Real personal income for the most recent year available"
+  },
+  {
+    "Feature": "r_income_pct",
+    "Column Number": 9,
+    "Pretty Name": "Real Personal Income percent change",
+    "Description": "Real personal income percent change from previous year"
+  },
+  {
+    "Feature": "r_income_delta",
+    "Column Number": 10,
+    "Pretty Name": "Real Personal Income change",
+    "Description": "Real personal income delta change from previous year"
+  },
+  {
+    "Feature": "income_per_capita",
+    "Column Number": 11,
+    "Pretty Name": "Income per capita",
+    "Description": "Income per capita"
+  },
+  {
+    "Feature": "business_density",
+    "Column Number": 12,
+    "Pretty Name": "Business Density",
+    "Description": "Number of business establishments"
+  },
+  {
+    "Feature": "population",
+    "Column Number": 13,
+    "Pretty Name": "Population",
+    "Description": "Population of the most recent year available"
+  },
+  {
+    "Feature": "population_pct",
+    "Column Number": 14,
+    "Pretty Name": "Population percent change",
+    "Description": "Population percent change from previous year"
+  },
+  {
+    "Feature": "population_delta",
+    "Column Number": 15,
+    "Pretty Name": "Population change",
+    "Description": "Population absolute change from previous year"
+  }
+]
