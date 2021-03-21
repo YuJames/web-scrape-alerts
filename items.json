@@ -161,12 +161,12 @@
         {
             "name": "7 in bart bat",
             "path": "collections/7-squishmallows/products/7-bart-the-bat-halloween-squishmallow",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "12 in easter cow",
-            "path": "collections/easter-squishmallows/products/12-belana-the-cow-easter-squishmallow",
+            "path": "collections/easter-squishmallows/products/copy-of-12-belana-the-cow-easter-squishmallow",
             "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
             "exclude": []
         }
