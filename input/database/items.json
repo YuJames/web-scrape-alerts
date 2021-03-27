@@ -141,6 +141,12 @@
             "path": "ip/Squishmallow-16IN-Plush-Axolotl/292959173",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "16 in. belana cow",
+            "path": "ip/Squishmallow-Official-Kellytoy-Plush-16IN-Cow-Ultrasoft-Stuffed-Animal-Plush-Toy/464496637",
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "exclude": []
         }
     ],
     "https://www.booksamillion.com": [
