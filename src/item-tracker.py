@@ -56,8 +56,10 @@ from logger import (
 
 
 PROJECT_ROOT = environ["PROJECT_ROOT"]
-CONFIG_FILE = path.join(PROJECT_ROOT, "items.json")
-SUBSCRIBERS_FILE = path.join(PROJECT_ROOT, "subscribers.json")
+INPUT_DIR = path.join(PROJECT_ROOT, "input")
+DATABASE_DIR = path.join(INPUT_DIR, "database")
+CONFIG_FILE = path.join(DATABASE_DIR, "items.json")
+SUBSCRIBERS_FILE = path.join(DATABASE_DIR, "subscribers.json")
 
 class EmailTiming:
     def __init__(self, max_retries=3):
@@ -536,6 +538,10 @@ class QueeniesCardsScraper(Scraper):
 class QueeniesCardsSortedScraper(Scraper):
     domain = "https://queeniescards.com/collections"
     xpath = "(//p[@class='grid-link__title'])[1]"
+
+class WalgreensScraper(Scraper):
+    domain = "https://walgreens.com"
+    xpath = "//li[@id='wag-shipping-tab']//span[@class='message__status']"
 
 async def main():
     # initialize database
