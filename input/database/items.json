@@ -216,5 +216,19 @@
             "subscribers": [],
             "exclude": []
         }
+    ],
+    "https://www.walgreens.com": [
+        {
+            "name": "16 in. frog",
+            "path": "store/c/squishmallow-frog-plush-16-inch/ID=300401697-product",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        },
+        {
+            "name": "10 in. winnie the pooh",
+            "path": "store/c/disney-squishmallow-winnie-the-pooh-10'/ID=300403026-product",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
     ]
 }
