@@ -540,7 +540,7 @@ class QueeniesCardsSortedScraper(Scraper):
     xpath = "(//p[@class='grid-link__title'])[1]"
 
 class WalgreensScraper(Scraper):
-    domain = "https://walgreens.com"
+    domain = "https://www.walgreens.com"
     xpath = "//li[@id='wag-shipping-tab']//span[@class='message__status']"
 
 async def main():
