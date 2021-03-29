@@ -539,6 +539,10 @@ class QueeniesCardsSortedScraper(Scraper):
     domain = "https://queeniescards.com/collections"
     xpath = "(//p[@class='grid-link__title'])[1]"
 
+class WalgreensScraper(Scraper):
+    domain = "https://walgreens.com"
+    xpath = "//li[@id='wag-shipping-tab']//span[@class='message__status']"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
