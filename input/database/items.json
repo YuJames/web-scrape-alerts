@@ -39,6 +39,13 @@
             "path": "us/squishmallows-5\"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "8 in. cinnamon bun",
+            "path": "squishmallows-8\"-cinnamon-roll-bun-soft-toy-261131.html",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+
         }
     ],
     "https://www.collectiblemadness.com.au": [
