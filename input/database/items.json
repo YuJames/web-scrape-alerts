@@ -39,6 +39,13 @@
             "path": "us/squishmallows-5\"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "8 in. cinnamon bun",
+            "path": "squishmallows-8\"-cinnamon-roll-bun-soft-toy-261131.html",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+
         }
     ],
     "https://www.collectiblemadness.com.au": [
@@ -227,6 +234,20 @@
         {
             "name": "10 in. winnie the pooh",
             "path": "store/c/disney-squishmallow-winnie-the-pooh-10'/ID=300403026-product",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://toydrops.com": [
+        {
+            "name": "3 set 5 in. axolotl",
+            "path": "products/axolotl",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        },
+        {
+            "name": "5 in. bart",
+            "path": "products/squishmallow-5-bart-the-halloween-bat-super-soft-mochi-squishy-plush-toy-toydrops-mexico-exclusive",
             "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }

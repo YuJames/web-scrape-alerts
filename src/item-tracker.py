@@ -543,6 +543,10 @@ class WalgreensScraper(Scraper):
     domain = "https://www.walgreens.com"
     xpath = "//li[@id='wag-shipping-tab']//span[@class='message__status']"
 
+class ToyDropsScraper(Scraper):
+    domain = "https://toydrops.com"
+    xpath = "//div[@class='product-details']//strong"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
