@@ -200,6 +200,12 @@
             "path": "collections/8-squishmallows/products/8-tank-the-hammerhead-shark-squishmallow",
             "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
+        },
+        {
+            "name": "16 in. mushroom (malcom)",
+            "path": "collections/16-squishmallows/products/16-malcolm-the-mushroom-squishmallow",
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "exclude": []
         }
     ],
     "https://queeniescards.com": [
@@ -249,6 +255,14 @@
             "name": "5 in. bart",
             "path": "products/squishmallow-5-bart-the-halloween-bat-super-soft-mochi-squishy-plush-toy-toydrops-mexico-exclusive",
             "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://www.thepaperstore.com": [
+        {
+            "name": "12 in. green turtle",
+            "path": "p/kell-sq-md-exc-grn-turtle/58758800005?fbclid=IwAR3ie2oLmb9ocl63AeZzkt0P2qzGXXssd7v4xN1jKeQxJH8ubHwctTDRgVI",
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
             "exclude": []
         }
     ]
