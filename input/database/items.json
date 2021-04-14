@@ -166,7 +166,7 @@
         {
             "name": "blue frog",
             "path": "p/BAM-Exclusive-Frog-Squishmallow/Squishmallow/F734689236480",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -254,7 +254,7 @@
         {
             "name": "3 set 5 in. axolotl",
             "path": "products/axolotl",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen"],
             "exclude": []
         },
         {
