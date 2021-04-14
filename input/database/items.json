@@ -90,6 +90,12 @@
             "path": "products/easter-squishmallows-4-5in",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "9 in. spring collection",
+            "path": "products/squishmallows-9in-spring-collection-5",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
         }
     ],
     "https://shop.landrysinc.com": [
