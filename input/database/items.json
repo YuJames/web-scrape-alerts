@@ -90,6 +90,12 @@
             "path": "products/easter-squishmallows-4-5in",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "9 in. spring collection",
+            "path": "products/squishmallows-9in-spring-collection-5",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
         }
     ],
     "https://shop.landrysinc.com": [
@@ -160,7 +166,7 @@
         {
             "name": "blue frog",
             "path": "p/BAM-Exclusive-Frog-Squishmallow/Squishmallow/F734689236480",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -248,7 +254,7 @@
         {
             "name": "3 set 5 in. axolotl",
             "path": "products/axolotl",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": ["self", "jennifer nguyen", "jenny nguyen"],
             "exclude": []
         },
         {
