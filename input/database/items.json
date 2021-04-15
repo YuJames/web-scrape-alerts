@@ -271,5 +271,13 @@
             "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
             "exclude": []
         }
+    ],
+    "https://www.selfridges.com": [
+        {
+            "name": "results count",
+            "path": "US/en/cat/?freeText=Squishmallow&srch=Y&fh_sort_by=relevance",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
     ]
 }
