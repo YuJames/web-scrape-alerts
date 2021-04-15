@@ -158,7 +158,7 @@
         {
             "name": "16 in. belana cow",
             "path": "ip/Squishmallow-Official-Kellytoy-Plush-16IN-Cow-Ultrasoft-Stuffed-Animal-Plush-Toy/464496637",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -186,25 +186,25 @@
         {
             "name": "12 in. easter cow",
             "path": "collections/easter-squishmallows/products/copy-of-12-belana-the-cow-easter-squishmallow",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "16 in. babs",
             "path": "collections/16-squishmallows/products/16-babs-the-blue-jay-squishmallow",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "16 in. tank",
             "path": "collections/16-squishmallows/products/16-tank-the-hammerhead-shark-squishmallow",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "8 in. tank",
             "path": "collections/8-squishmallows/products/8-tank-the-hammerhead-shark-squishmallow",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
@@ -218,13 +218,13 @@
         {
             "name": "7 in duck",
             "path": "collections/squishmallows/products/7-squishmallow-mallard-duck-plush?variant=37521984192668",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         },
         {
             "name": "3.5 in cow clip",
             "path": "collections/squishmallows/products/3-5-squishmallow-cow-backpack-clip?variant=37262355366044",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
     ],
@@ -232,7 +232,7 @@
         {
             "name": "first item",
             "path": "squishmallows?sort_by=created-descending",
-            "subscribers": [],
+            "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
     ],
@@ -240,13 +240,13 @@
         {
             "name": "16 in. frog",
             "path": "store/c/squishmallow-frog-plush-16-inch/ID=300401697-product",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "10 in. winnie the pooh",
             "path": "store/c/disney-squishmallow-winnie-the-pooh-10'/ID=300403026-product",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         }
     ],
