@@ -279,5 +279,13 @@
             "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
+    ],
+    "https://shop.cows.ca": [
+        {
+            "name": "minecraft cows",
+            "path": "shop/squishmallow-plush",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
     ]
 }
