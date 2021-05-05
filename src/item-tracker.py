@@ -547,6 +547,18 @@ class ToyDropsScraper(Scraper):
     domain = "https://toydrops.com"
     xpath = "//div[@class='product-details']//strong"
 
+class ThePaperStoreScraper(Scraper):
+    domain = "https://www.thepaperstore.com"
+    xpath = "//button[@id='js-add-to-cart']//span"
+
+class SelfridgesSortedScraper(Scraper):
+    domain = "https://www.selfridges.com"
+    xpath = "//div[@class='c-sticky-bar__results u-d-desktop']"
+
+class ShopCowsScraper(Scraper):
+    domain = "https://shop.cows.ca"
+    xpath = "//div[@class='summary entry-summary']//p"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
