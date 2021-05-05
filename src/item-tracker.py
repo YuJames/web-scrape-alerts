@@ -401,10 +401,11 @@ class Scraper(ScrapeTiming):
         else:
             text = "::".join([x.text for x in elements])
         availability = sub(
-            pattern=r"\s",
+            pattern=r"\s+",
             repl=" ",
             string=text
-        )
+        ).strip().upper()
+
         self.driver.refresh()
 
         return availability
