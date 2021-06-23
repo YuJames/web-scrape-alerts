@@ -7,7 +7,6 @@ from itertools import (
     count
 )
 from json import (
-    dumps,
     load
 )
 from os import (
@@ -15,7 +14,6 @@ from os import (
     path
 )
 from re import (
-    search,
     sub
 )
 from smtplib import (
@@ -29,8 +27,7 @@ from fastcore.utils import (
     store_attr
 )
 from selenium.webdriver import (
-    Firefox,
-    FirefoxProfile
+    Firefox
 )
 from selenium.webdriver.common.by import (
     By
@@ -39,8 +36,7 @@ from selenium.webdriver.firefox.options import (
     Options
 )
 from selenium.webdriver.support.expected_conditions import (
-    visibility_of_all_elements_located,
-    visibility_of_element_located
+    visibility_of_all_elements_located
 )
 from selenium.webdriver.support.ui import (
     WebDriverWait
@@ -401,10 +397,11 @@ class Scraper(ScrapeTiming):
         else:
             text = "::".join([x.text for x in elements])
         availability = sub(
-            pattern=r"\s",
+            pattern=r"\s+",
             repl=" ",
             string=text
-        )
+        ).strip().upper()
+
         self.driver.refresh()
 
         return availability
@@ -558,6 +555,10 @@ class SelfridgesSortedScraper(Scraper):
 class ShopCowsScraper(Scraper):
     domain = "https://shop.cows.ca"
     xpath = "//div[@class='summary entry-summary']//p"
+
+class TargetScraper(Scraper):
+    domain = "https://www.target.com"
+    xpath = "//div[@data-test='flexible-fulfillment']//button"
 
 async def main():
     # initialize database
