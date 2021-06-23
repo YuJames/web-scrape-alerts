@@ -7,7 +7,6 @@ from itertools import (
     count
 )
 from json import (
-    dumps,
     load
 )
 from os import (
@@ -15,7 +14,6 @@ from os import (
     path
 )
 from re import (
-    search,
     sub
 )
 from smtplib import (
@@ -29,8 +27,7 @@ from fastcore.utils import (
     store_attr
 )
 from selenium.webdriver import (
-    Firefox,
-    FirefoxProfile
+    Firefox
 )
 from selenium.webdriver.common.by import (
     By
@@ -39,8 +36,7 @@ from selenium.webdriver.firefox.options import (
     Options
 )
 from selenium.webdriver.support.expected_conditions import (
-    visibility_of_all_elements_located,
-    visibility_of_element_located
+    visibility_of_all_elements_located
 )
 from selenium.webdriver.support.ui import (
     WebDriverWait
