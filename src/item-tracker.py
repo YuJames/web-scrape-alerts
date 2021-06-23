@@ -554,7 +554,7 @@ class SelfridgesSortedScraper(Scraper):
 
 class ShopCowsScraper(Scraper):
     domain = "https://shop.cows.ca"
-    xpath = "//div[@class='summary entry-summary']//p"
+    xpath = "(//div[@class='summary entry-summary']//p)[last()]"
 
 class TargetScraper(Scraper):
     domain = "https://www.target.com"
