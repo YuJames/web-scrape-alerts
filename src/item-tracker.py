@@ -524,6 +524,10 @@ class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"
     xpath = "//div[@class='productAvailableText']"
 
+class BAMSearchScraper(Scraper):
+    domain = "https://www.booksamillion.com/search"
+    xpath = "//div[@class='search-interval']"
+
 class OwlGooseGiftScraper(Scraper):
     domain = "https://owlandgoosegifts.com"
     xpath = "//span[@data-add-to-cart-text='']"
@@ -554,7 +558,7 @@ class SelfridgesSortedScraper(Scraper):
 
 class ShopCowsScraper(Scraper):
     domain = "https://shop.cows.ca"
-    xpath = "//div[@class='summary entry-summary']//p"
+    xpath = "(//div[@class='summary entry-summary']//p)[last()]"
 
 class TargetScraper(Scraper):
     domain = "https://www.target.com"
