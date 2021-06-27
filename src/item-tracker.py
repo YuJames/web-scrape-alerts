@@ -524,6 +524,10 @@ class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"
     xpath = "//div[@class='productAvailableText']"
 
+class BAMSearchScraper(Scraper):
+    domain = "https://www.booksamillion.com/search"
+    xpath = "//div[@class='search-interval']"
+
 class OwlGooseGiftScraper(Scraper):
     domain = "https://owlandgoosegifts.com"
     xpath = "//span[@data-add-to-cart-text='']"
