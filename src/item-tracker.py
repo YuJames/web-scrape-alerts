@@ -562,7 +562,11 @@ class ShopCowsScraper(Scraper):
 
 class TargetScraper(Scraper):
     domain = "https://www.target.com"
-    xpath = "//div[@data-test='flexible-fulfillment']//button"
+    xpath = "(//div[@data-test='flexible-fulfillment']//button)[last()]"
+
+class KidstuffScraper(Scraper):
+    domain = "https://www.kidstuff.com.au"
+    xpath = "//nav[@class='breadcrumbs-container']//span[last()]"
 
 async def main():
     # initialize database
