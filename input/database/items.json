@@ -309,5 +309,13 @@
             "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
+    ],
+    "https://www.kidstuff.com.au": [
+        {
+            "name": "squishmallows search",
+            "path": "search?type=product&q=Squishmallows*",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
     ]
 }
