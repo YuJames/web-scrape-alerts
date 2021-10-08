@@ -170,6 +170,14 @@
             "exclude": []
         }
     ],
+    "https://www.booksamillion.com/search": [
+        {
+            "name": "squishmallows search",
+            "path": "?filter=;id=8247446464353;query=squishmallow",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
     "https://owlandgoosegifts.com": [
         {
             "name": "5 in. easter cow",
@@ -298,6 +306,14 @@
         {
             "name": "16 in. blue bigfoot",
             "path": "p/squishmallows-16-34-big-foot/-/A-81581594",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://www.kidstuff.com.au": [
+        {
+            "name": "squishmallows search",
+            "path": "search?type=product&q=Squishmallows*",
             "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }

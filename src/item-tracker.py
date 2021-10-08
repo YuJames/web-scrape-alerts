@@ -524,6 +524,10 @@ class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"
     xpath = "//div[@class='productAvailableText']"
 
+class BAMSearchScraper(Scraper):
+    domain = "https://www.booksamillion.com/search"
+    xpath = "//div[@class='search-interval']"
+
 class OwlGooseGiftScraper(Scraper):
     domain = "https://owlandgoosegifts.com"
     xpath = "//span[@data-add-to-cart-text='']"
@@ -558,7 +562,11 @@ class ShopCowsScraper(Scraper):
 
 class TargetScraper(Scraper):
     domain = "https://www.target.com"
-    xpath = "//div[@data-test='flexible-fulfillment']//button"
+    xpath = "(//div[@data-test='flexible-fulfillment']//button)[last()]"
+
+class KidstuffScraper(Scraper):
+    domain = "https://www.kidstuff.com.au"
+    xpath = "//nav[@class='breadcrumbs-container']//span[last()]"
 
 async def main():
     # initialize database
