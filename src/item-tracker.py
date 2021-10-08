@@ -120,7 +120,7 @@ class Emailer(EmailTiming):
                             f"From: {self.sender}\n"
                             f"To: {i}\n"
                             f"Subject: {subject}\n\n"
-                            f"{message}"
+                            f"{message.encode('ascii', errors='ignore').decode()}"
                         )
                     )
 
