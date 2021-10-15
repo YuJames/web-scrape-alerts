@@ -5,7 +5,7 @@ echo "0) SCRIPT $(basename $BASH_SOURCE)"
 echo "1) INITIALIZE SERVER VARIABLES"
 
 echo "2) INITIALIZE PROJECT VARIABLES"
-BUILD_NUMBER="1.11.3"
+BUILD_NUMBER="1.11.4"
 BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
 GIT_HASH="$(git log --pretty=format:'%h' -n 1)"
 if [ "${BRANCH}" = "production" ]; then
