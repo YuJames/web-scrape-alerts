@@ -7,7 +7,6 @@ from itertools import (
     count
 )
 from json import (
-    dumps,
     load
 )
 from os import (
@@ -15,7 +14,6 @@ from os import (
     path
 )
 from re import (
-    search,
     sub
 )
 from smtplib import (
@@ -29,8 +27,7 @@ from fastcore.utils import (
     store_attr
 )
 from selenium.webdriver import (
-    Firefox,
-    FirefoxProfile
+    Firefox
 )
 from selenium.webdriver.common.by import (
     By
@@ -39,8 +36,7 @@ from selenium.webdriver.firefox.options import (
     Options
 )
 from selenium.webdriver.support.expected_conditions import (
-    visibility_of_all_elements_located,
-    visibility_of_element_located
+    visibility_of_all_elements_located
 )
 from selenium.webdriver.support.ui import (
     WebDriverWait
@@ -123,8 +119,8 @@ class Emailer(EmailTiming):
                         (
                             f"From: {self.sender}\n"
                             f"To: {i}\n"
-                            f"Subject: {subject}\n\n"
-                            f"{message}"
+                            f"Subject: {subject.encode('ascii', errors='ignore').decode()}\n\n"
+                            f"{message.encode('ascii', errors='ignore').decode()}"
                         )
                     )
 
@@ -401,10 +397,11 @@ class Scraper(ScrapeTiming):
         else:
             text = "::".join([x.text for x in elements])
         availability = sub(
-            pattern=r"\s",
+            pattern=r"\s+",
             repl=" ",
             string=text
-        )
+        ).strip().upper()
+
         self.driver.refresh()
 
         return availability
@@ -527,6 +524,10 @@ class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"
     xpath = "//div[@class='productAvailableText']"
 
+class BAMSearchScraper(Scraper):
+    domain = "https://www.booksamillion.com/search"
+    xpath = "//div[@class='search-interval']"
+
 class OwlGooseGiftScraper(Scraper):
     domain = "https://owlandgoosegifts.com"
     xpath = "//span[@data-add-to-cart-text='']"
@@ -538,6 +539,34 @@ class QueeniesCardsScraper(Scraper):
 class QueeniesCardsSortedScraper(Scraper):
     domain = "https://queeniescards.com/collections"
     xpath = "(//p[@class='grid-link__title'])[1]"
+
+class WalgreensScraper(Scraper):
+    domain = "https://www.walgreens.com"
+    xpath = "//li[@id='wag-shipping-tab']//span[@class='message__status']"
+
+class ToyDropsScraper(Scraper):
+    domain = "https://toydrops.com"
+    xpath = "//div[@class='product-details']//strong"
+
+class ThePaperStoreScraper(Scraper):
+    domain = "https://www.thepaperstore.com"
+    xpath = "//button[@id='js-add-to-cart']//span"
+
+class SelfridgesSortedScraper(Scraper):
+    domain = "https://www.selfridges.com"
+    xpath = "//div[@class='c-sticky-bar__results u-d-desktop']"
+
+class ShopCowsScraper(Scraper):
+    domain = "https://shop.cows.ca"
+    xpath = "(//div[@class='summary entry-summary']//p)[last()]"
+
+class TargetScraper(Scraper):
+    domain = "https://www.target.com"
+    xpath = "(//div[@data-test='flexible-fulfillment']//button)[last()]"
+
+class KidstuffScraper(Scraper):
+    domain = "https://www.kidstuff.com.au"
+    xpath = "//nav[@class='breadcrumbs-container']//span[last()]"
 
 async def main():
     # initialize database

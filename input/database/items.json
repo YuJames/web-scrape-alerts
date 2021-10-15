@@ -39,6 +39,13 @@
             "path": "us/squishmallows-5\"-summer-fun-plush-toy---styles-may-vary-260946.html?pid=260946",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "8 in. cinnamon bun",
+            "path": "squishmallows-8\"-cinnamon-roll-bun-soft-toy-261131.html",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+
         }
     ],
     "https://www.collectiblemadness.com.au": [
@@ -81,6 +88,12 @@
         {
             "name": "4.5 in easter squish",
             "path": "products/easter-squishmallows-4-5in",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "9 in. spring collection",
+            "path": "products/squishmallows-9in-spring-collection-5",
             "subscribers": [],
             "exclude": []
         }
@@ -145,7 +158,7 @@
         {
             "name": "16 in. belana cow",
             "path": "ip/Squishmallow-Official-Kellytoy-Plush-16IN-Cow-Ultrasoft-Stuffed-Animal-Plush-Toy/464496637",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -153,27 +166,59 @@
         {
             "name": "blue frog",
             "path": "p/BAM-Exclusive-Frog-Squishmallow/Squishmallow/F734689236480",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
+            "exclude": []
+        }
+    ],
+    "https://www.booksamillion.com/search": [
+        {
+            "name": "squishmallows search",
+            "path": "?filter=;id=8247446464353;query=squishmallow",
+            "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
     ],
     "https://owlandgoosegifts.com": [
         {
-            "name": "5 in easter cow",
+            "name": "5 in. easter cow",
             "path": "collections/easter-squishmallows/products/coming-soon-5-belana-the-cow-easter-squishmallow",
             "subscribers": [],
             "exclude": []
         },
         {
-            "name": "7 in bart bat",
+            "name": "7 in. bart bat",
             "path": "collections/7-squishmallows/products/7-bart-the-bat-halloween-squishmallow",
             "subscribers": [],
             "exclude": []
         },
         {
-            "name": "12 in easter cow",
+            "name": "12 in. easter cow",
             "path": "collections/easter-squishmallows/products/copy-of-12-belana-the-cow-easter-squishmallow",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "16 in. babs",
+            "path": "collections/16-squishmallows/products/16-babs-the-blue-jay-squishmallow",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "16 in. tank",
+            "path": "collections/16-squishmallows/products/16-tank-the-hammerhead-shark-squishmallow",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "8 in. tank",
+            "path": "collections/8-squishmallows/products/8-tank-the-hammerhead-shark-squishmallow",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "16 in. mushroom (malcom)",
+            "path": "collections/16-squishmallows/products/16-malcolm-the-mushroom-squishmallow",
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -181,13 +226,13 @@
         {
             "name": "7 in duck",
             "path": "collections/squishmallows/products/7-squishmallow-mallard-duck-plush?variant=37521984192668",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "3.5 in cow clip",
             "path": "collections/squishmallows/products/3-5-squishmallow-cow-backpack-clip?variant=37262355366044",
-            "subscribers": ["jennifer nguyen", "self"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -195,7 +240,81 @@
         {
             "name": "first item",
             "path": "squishmallows?sort_by=created-descending",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://www.walgreens.com": [
+        {
+            "name": "16 in. frog",
+            "path": "store/c/squishmallow-frog-plush-16-inch/ID=300401697-product",
             "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "10 in. winnie the pooh",
+            "path": "store/c/disney-squishmallow-winnie-the-pooh-10'/ID=300403026-product",
+            "subscribers": [],
+            "exclude": []
+        }
+    ],
+    "https://toydrops.com": [
+        {
+            "name": "3 set 5 in. axolotl",
+            "path": "products/axolotl",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "5 in. bart",
+            "path": "products/squishmallow-5-bart-the-halloween-bat-super-soft-mochi-squishy-plush-toy-toydrops-mexico-exclusive",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://www.thepaperstore.com": [
+        {
+            "name": "12 in. green turtle",
+            "path": "p/kell-sq-md-exc-grn-turtle/58758800005?fbclid=IwAR3ie2oLmb9ocl63AeZzkt0P2qzGXXssd7v4xN1jKeQxJH8ubHwctTDRgVI",
+            "subscribers": [],
+            "exclude": []
+        }
+    ],
+    "https://www.selfridges.com": [
+        {
+            "name": "results count",
+            "path": "US/en/cat/?freeText=Squishmallow&srch=Y&fh_sort_by=relevance",
+            "subscribers": [],
+            "exclude": []
+        }
+    ],
+    "https://shop.cows.ca": [
+        {
+            "name": "minecraft cows",
+            "path": "shop/squishmallow-plush",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
+        }
+    ],
+    "https://www.target.com": [
+        {
+            "name": "20 in. brown bigfoot",
+            "path": "p/squishmallows-20-34-big-foot/-/A-81581577",
+            "subscribers": [],
+            "exclude": []
+        },
+        {
+            "name": "16 in. blue bigfoot",
+            "path": "p/squishmallows-16-34-big-foot/-/A-81581594",
+            "subscribers": [],
+            "exclude": []
+        }
+    ],
+    "https://www.kidstuff.com.au": [
+        {
+            "name": "squishmallows search",
+            "path": "search?type=product&q=Squishmallows*",
+            "subscribers": ["self", "jennifer nguyen"],
             "exclude": []
         }
     ]
