@@ -518,7 +518,7 @@ class SmythsScraper(Scraper):
 
 class WalmartScraper(Scraper):
     domain = "https://www.walmart.com"
-    xpath = "//span[@class='spin-button-children']"
+    xpath = "(//div[@class='flex flex-column']//text())[last()]"
 
 class BAMScraper(Scraper):
     domain = "https://www.booksamillion.com"

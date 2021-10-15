@@ -160,6 +160,12 @@
             "path": "ip/Squishmallow-Official-Kellytoy-Plush-16IN-Cow-Ultrasoft-Stuffed-Animal-Plush-Toy/464496637",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "12 in. monster",
+            "path": "ip/Squishmallows-Official-Kellytoy-Plush-12-Monster-Ultrasoft-Stuffed-Plush-Toy/510443717",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
         }
     ],
     "https://www.booksamillion.com": [
