@@ -94,7 +94,7 @@
         {
             "name": "9 in. spring collection",
             "path": "products/squishmallows-9in-spring-collection-5",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -160,6 +160,12 @@
             "path": "ip/Squishmallow-Official-Kellytoy-Plush-16IN-Cow-Ultrasoft-Stuffed-Animal-Plush-Toy/464496637",
             "subscribers": [],
             "exclude": []
+        },
+        {
+            "name": "12 in. monster",
+            "path": "ip/Squishmallows-Official-Kellytoy-Plush-12-Monster-Ultrasoft-Stuffed-Plush-Toy/510443717",
+            "subscribers": ["self", "jennifer nguyen"],
+            "exclude": []
         }
     ],
     "https://www.booksamillion.com": [
@@ -218,7 +224,7 @@
         {
             "name": "16 in. mushroom (malcom)",
             "path": "collections/16-squishmallows/products/16-malcolm-the-mushroom-squishmallow",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -226,13 +232,13 @@
         {
             "name": "7 in duck",
             "path": "collections/squishmallows/products/7-squishmallow-mallard-duck-plush?variant=37521984192668",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "3.5 in cow clip",
             "path": "collections/squishmallows/products/3-5-squishmallow-cow-backpack-clip?variant=37262355366044",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -262,7 +268,7 @@
         {
             "name": "3 set 5 in. axolotl",
             "path": "products/axolotl",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
@@ -276,7 +282,7 @@
         {
             "name": "12 in. green turtle",
             "path": "p/kell-sq-md-exc-grn-turtle/58758800005?fbclid=IwAR3ie2oLmb9ocl63AeZzkt0P2qzGXXssd7v4xN1jKeQxJH8ubHwctTDRgVI",
-            "subscribers": ["self", "jennifer nguyen", "jenny nguyen", "phil pham", "ariel nguyen", "chelsea taylor", "ashley palaroan"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -284,7 +290,7 @@
         {
             "name": "results count",
             "path": "US/en/cat/?freeText=Squishmallow&srch=Y&fh_sort_by=relevance",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         }
     ],
@@ -300,13 +306,13 @@
         {
             "name": "20 in. brown bigfoot",
             "path": "p/squishmallows-20-34-big-foot/-/A-81581577",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         },
         {
             "name": "16 in. blue bigfoot",
             "path": "p/squishmallows-16-34-big-foot/-/A-81581594",
-            "subscribers": ["self", "jennifer nguyen"],
+            "subscribers": [],
             "exclude": []
         }
     ],
