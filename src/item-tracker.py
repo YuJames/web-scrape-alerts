@@ -568,6 +568,10 @@ class KidstuffScraper(Scraper):
     domain = "https://www.kidstuff.com.au"
     xpath = "//nav[@class='breadcrumbs-container']//span[last()]"
 
+class HotTopicScraper(Scraper):
+    domain = "https://www.hottopic.com"
+    xpath = "//div[@class='method-descr__label method-descr__label--ship']//span"
+
 async def main():
     # initialize database
     database = Database(items_db_file=CONFIG_FILE, subs_db_file=SUBSCRIBERS_FILE)
