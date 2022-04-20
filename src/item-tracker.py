@@ -570,7 +570,7 @@ class KidstuffScraper(Scraper):
 
 class HotTopicScraper(Scraper):
     domain = "https://www.hottopic.com"
-    xpath = "//div[@class='method-descr__label method-descr__label--ship']//span"
+    xpath = "//ul[@class='list-unstyled availability-msg']//div"
 
 async def main():
     # initialize database
