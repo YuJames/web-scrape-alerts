@@ -3,7 +3,7 @@ chardet==4.0.0
 fastcore==1.2.5
 idna==2.10
 packaging==20.4
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyparsing==2.4.7
 pytz==2021.1
 requests==2.25.1
